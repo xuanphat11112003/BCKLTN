@@ -1,0 +1,42 @@
+/* Login.module.css */
+.container {
+    position: relative;
+    height: 100vh; /* Make sure the container takes the full height of the viewport */
+  }
+  
+  .particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Ensure it's behind the form */
+  }
+  
+  .formContainer {
+    padding: 20px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: white;
+    max-width: 100%; /* Ensure it scales correctly on smaller screens */
+    z-index: 2; /* Ensure it's in front of the particles */
+  }
+  
+  .header {
+    text-align: center;
+  }
+  
+  .inputField {
+    width: 100%;
+    height: 50px;
+  }
+  
+  .submitButton {
+    width: 100%;
+  }
+  
+  .linkContainer {
+    text-align: center;
+  }
+  

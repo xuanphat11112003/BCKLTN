@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+  .listChoose{
+      border: 1px solid #ddd;
+      max-height: 60%;
+      overflow-y: scroll;
+  }
+  .list-group{
+      list-style-type: none;
+      flex-direction: column;
+      display: flex;
+      gap: 10px;
+  }
+  .list-group-item {
+      display: flex;
+      padding: 10px;
+      background-color: #f8f9fa; /* Màu nền */
+  }
+  .list-group-item span {
+      flex: 1;
+  }
+  .list-group-item .quantity {
+      margin-left: 15px;
+  }
+  #backgr{
+      background-color: wheat;
+      padding-left: 51px;
+  }
+  .form-search{
+    display : flex;
+  }
+  #loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Màu nền xám mờ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Đảm bảo overlay nằm trên cùng */
+}
+
+#loading-spinner i {
+  font-size: 3rem;
+  color: white;
+  margin-left: 68px;
+}
+
+#loading-spinner p {
+  color: white;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+</style>
+
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Quản Lý Sản Xuất
+        <small>Thêm mới đơn sản xuất</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a th:href="@{/product-list}">sản xuất</a></li>
+        <li class="active">Thêm đơn sản xuất</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Chọn Sản Phẩm</h3>
+        </div>
+        <div class="box-body">
+          <form th:action="@{/manufacture/order}" method="get" class = "form-search">
+            <input type="text" class="form-control" id="kw" placeholder="Từ khóa..." name="name">
+            <button class="btn btn-info" type="submit">Tìm kiếm</button>
+          </form>
+          <div class="wareHouse">
+            <label for="wareHouseId" class="form-label">Supplier: </label>
+            <select class="form-control field-wareHouse" th:filed ="*{supplierId}" id="wareHouseId"  name ="wareHouse-id">
+              <option value="" label="-- Chọn Kho Hàng --"></option>
+              <option th:each="wareHouse : ${warehouses}" th:value ="${wareHouse.id}" th:text ="${wareHouse.name}"></option>
+            </select>
+          </div>
+          <h3>Chọn Sản Phẩm</h3>
+          <div class="col">
+            <div id="materialButtons">
+              <ul class="nav nav-tabs">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" th:href="@{/manufacture/order(category-id=)}">All</a>
+                </li>
+                <li th:each="category : ${categories}" class="nav-item">
+                  <a class="nav-link "  th:href="@{/manufacture/order(category-id=${category.id})}"
+                     th:text="${category.name}"></a>
+                </li>
+              </ul>
+            </div>
+            <div class="row-md-6">
+              <th:block th:each="product : ${products}">
+                <button style="width: 120px; height: 50px; margin: 10px" type="button"
+                        class="btn btn-primary product-btn" th:data-id="${product.id}" th:data-name="${product.name}">
+                  <span th:text="${product.name}"></span>
+                </button>
+              </th:block>
+
+            </div>
+
+            <div class="row-md-6">
+              <div class="listChoose">
+                <h3>Sản phẩm chọn sản xuất</h3>
+                <span> Tên Sản phẩm <span style="margin-left: 30%"> số lượng</span></span>
+                <ul id="selectedProducts" class="list-group"></ul>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="mt-4">
+            <button id="submitButton" class="btn btn-success" >Gửi Dữ Liệu</button>
+            <button type="button" class="btn btn-primary"  id="createOrder1" style="display : none ">Lưu Trữ Đơn Hàng</button>
+          </div>
+        </div>
+      </div>
+      <div id="loading-overlay" style="display: none;">
+        <div id="loading-spinner">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Đang tạo đơn hàng, vui lòng đợi...</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="materialModal" tabindex="-1" role="dialog" aria-labelledby="materialModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="materialModalLabel">Vật liệu không đủ</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="materialList">
+          <!-- Nội dung sẽ được thêm ở đây -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-primary" id="createOrder">Tạo đơn hàng kho</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+<script th:src = "@{/src/js/order-manufacture.js}" ></script>
+<div id="urlContainer" th:data-url="@{/manufacture/order}"></div>
+<div id="urlContainer1" th:data-url="@{/import-order/suppliers}"></div>
+<div id="urlContainer2" th:data-url="@{/manufacture/orderPending}"></div>
+<div class="Payments" style="display : none">
+  <label for="PaymentId" class="form-label">Payment: </label>
+  <select class="form-control field-payment" th:filed ="*{PaymentId}" id="PaymentId"  name ="payment-id">
+    <option value="" label="-- Chọn Phương Thức Thanh Toán --"></option>
+    <option th:each="payment : ${payments}" th:value ="${payment.value}" th:text ="${payment.value}"></option>
+  </select>
+</div>
+
+
+</body>
+</html>

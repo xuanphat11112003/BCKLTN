@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+  .listChoose{
+      border: 1px solid #ddd;
+      max-height: 60%;
+      overflow-y: scroll;
+      margin-top: 22%;
+  }
+  .list-group{
+      list-style-type: none;
+      flex-direction: column;
+      display: flex;
+      gap: 10px;
+  }
+  .list-group-item {
+      display: flex;
+      padding: 10px;
+      background-color: #f8f9fa;
+  }
+  .list-group-item * {
+      flex: 1;
+  }
+  .list-group-item .quantity {
+      margin-left: 30px;
+      margin-right: 30px;
+  }
+  #backgr{
+      background-color: wheat;
+      padding-left: 51px;
+  }
+
+</style>
+
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Quản Lý Sản Xuất Sản Phẩm
+        <small>Thêm mới công thức sản xuất sản phẩm</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a th:href="@{/product-list}">Danh sách công thức sản phẩm</a></li>
+        <li class="active">Thêm công thức sản phẩm</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Chọn Sản Phẩm</h3>
+        </div>
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-6">
+              <select id="productSelect" class="form-control">
+                <th:block th:each="product : ${products}">
+                  <th:block th:if="${not #lists.contains(manufactures, product.id)}">
+                    <option th:value="${product.id}" th:text="${product.name}"></option>
+                  </th:block>
+                </th:block>
+              </select>
+              <div class="listChoose">
+                <h3>Vật Liệu Được Chọn</h3>
+                <span> Tên Sản phẩm <span style="margin-left: 14%"> số lượng</span></span>
+                <ul id="selectedMaterials" class="list-group"></ul>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <form th:action="@{/manufacture/add}" method="get">
+                <input type="text" class="form-control" id="kw" placeholder="Từ khóa..." name="name">
+                <button class="btn btn-info" type="submit">Tìm kiếm</button>
+              </form>
+              <h3>Chọn Vật Liệu</h3>
+              <div id="materialButtons">
+                <ul class="nav nav-tabs">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/manufacture/add}">All</a>
+                  </li>
+                  <li th:each="category : ${categories}" class="nav-item">
+                    <a class="nav-link "  th:href="@{/manufacture/add(category-id=${category.id})}"
+                       th:text="${category.name}"></a>
+                  </li>
+                </ul>
+                <th:block th:each="material : ${materials}">
+                  <button style="width: 120px; height: 50px; margin: 10px" type="button" class="btn btn-primary material-btn"
+                          th:data-unit="${material.unit}"
+                          th:data-id="${material.id}" th:data-name="${material.name}">
+                    <span th:text="${material.name}"></span>
+                  </button>
+                </th:block>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="mt-4">
+            <button id="submitButton" class="btn btn-success">Gửi Dữ Liệu</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+<div id="urlContainer" th:data-url="@{/manufacture}"></div>
+<script th:src = "@{/src/js/add-manufacture.js}" ></script>
+
+</body>
+</html>

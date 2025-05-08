@@ -1,0 +1,57 @@
+version: "3.1"
+
+rules:
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: Say 'I am a bot' anytime the user challenges
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
+
+- rule: Respond with product price
+  steps:
+      - intent: ask_price
+      - action: action_show_price
+
+- rule: Respond with product category
+  steps:
+      - intent: ask_category
+      - action: action_show_category
+
+- rule: Respond with product image
+  steps:
+      - intent: ask_image
+      - action: action_show_image
+
+- rule: User asks for product details
+  steps:
+      - intent: ask_product_details
+      - action: action_show_product_details
+
+- rule: Provide product review
+  steps:
+      - intent: ask_review
+      - action: action_show_review
+
+- rule: Provide return policy
+  steps:
+      - intent: ask_return_policy
+      - action: action_return_policy
+
+- rule: Provide return relate product
+  steps:
+      - intent: ask_related_products
+      - action: action_suggest_similar_products
+
+- rule: User asks about storage guide
+  steps:
+    - intent: ask_storage
+    - action: action_show_storage_guide
+
+- rule: Analyze sentiment on every user message
+  steps:
+    - action: action_analyze_sentiment

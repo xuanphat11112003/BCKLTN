@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+  .info-container {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+  }
+  .info-item {
+      flex: 1 1 50%;
+      padding: 10px;
+      box-sizing: border-box;
+  }
+  .info-item strong {
+      display: inline-block;
+      width: 150px;
+  }
+  .box {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 20px;
+  }
+  h3 {
+      margin-top: 20px;
+  }
+  .listContent{
+    border-radius: 0.5rem;
+    border: 1px solid;
+    padding: 10px;
+    margin: 15px;
+  }
+  #searchForm {
+    justify-content: space-between;
+    display: flex;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-form .form-control {
+    margin-right: 10px;
+    flex: 1;
+    min-width: 150px;
+}
+
+.search-form button {
+    margin-left: 10px;
+}
+
+</style>
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>Hóa Đơn Chi Tiết</h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang Chủ</a></li>
+        <li class="active">Hóa Đơn</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <div class="box">
+        <div class="box-header with-border">
+          <h3 class="box-title">Thông Tin Đơn Hàng</h3>
+          <a th:href="@{/orderExport}" class="btn btn-primary pull-right">Tạo đơn hàng</a>
+        </div>
+        <div class="box-body">
+          <form id="searchForm" th:action="@{/orderExport/index}">
+            <div class="form-group">
+              <label for="orderId">ID Đơn Hàng:</label>
+              <input type="text" class="form-control" id="orderId" name="orderId" placeholder="Nhập ID đơn hàng">
+            </div>
+            <div class="form-group">
+              <label for="agencyName">Tên Đối Tác:</label>
+              <input type="text" class="form-control" id="agencyName" name="agencyName" placeholder="Nhập tên đối tác">
+            </div>
+            <div class="form-group">
+              <label for="state">Trạng Thái:</label>
+              <select id="state" name="state" class="form-control">
+                <option value="">Tất cả</option>
+                <option value="Đang Xử Lý">Đang Xử Lý</option>
+                <option value="Đang Vận Chuyển">Đang Vận Chuyển</option>
+                <option value="Hoàn Thành">Hoàn Thành</option>
+                <option value="Đã Hủy">Đã Hủy</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
+          </form>
+          <div th:each="order : ${orderExportRequest}" class = "listContent">
+            <h4>Hóa Đơn #<span th:text="${order.id}"></span></h4>
+            <div class="info-container">
+              <div class="info-item">
+                <strong>Tên Khách Hàng:</strong>
+                <span th:text="${order.orderForName}"></span>
+              </div>
+              <div class="info-item">
+                <strong>ID Khách Hàng:</strong>
+                <span th:text="${order.orderForId}"></span>
+              </div>
+              <div class="info-item">
+                <strong>Người Đặt Hàng:</strong>
+                <span th:text="${order.orderByName}"></span>
+              </div>
+              <div class="info-item">
+                <strong>ID Người Đặt Hàng:</strong>
+                <span th:text="${order.orderById}"></span>
+              </div>
+              <div class="info-item">
+                <strong>Trạng Thái:</strong>
+                <span th:text="${order.state}"></span>
+              </div>
+            </div>
+            <hr/>
+
+            <!-- Chi Tiết Đơn Hàng -->
+            <h3>Chi Tiết Đơn Hàng</h3>
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th>ID Sản Phẩm</th>
+                <th>Tên Sản Phẩm</th>
+                <th>Số Lượng</th>
+                <th>Giá (VNĐ)</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="detail : ${order.details}">
+                <td th:text="${detail.productId}"></td>
+                <td th:text="${detail.productName}"></td>
+                <td th:text="${detail.amount}"></td>
+                <td th:text="${detail.total_price}"></td>
+              </tr>
+              </tbody>
+            </table>
+
+            <h3>Chi Phí Đơn Hàng</h3>
+            <p><strong>Giá Kho:</strong> <span th:text="${order.wareHousePrice}"></span> VNĐ</p>
+            <p><strong>Giá Vận Chuyển:</strong> <span th:text="${order.transPrice}"></span> VNĐ</p>
+            <h4><strong>Tổng Cộng:</strong> <span th:text="${order.totalPrice}"></span> VNĐ</h4>
+            <hr/>
+
+            <button class="btn btn-primary status-btn acceptOrder"
+                    th:data-id = "${order.id}"
+                    th:if="${order.state == 'Đang Xử Lý'}">Xác Nhận Đơn Hàng</button>
+            <button class="btn btn-danger status-btn deleteOrder"
+                    th:data-id = "${order.id}" style="margin-left : 10px;" th:onclick="deleteS('[[@{/orderExport/{id}(id=${order.id})}]]', [[${order.id}]])"
+                    th:if="${order.state == 'Đang Xử Lý'}">Xóa</button>
+            <button class="btn btn-info status-btn ProcessBtn"
+                    th:data-id = "${order.id}"
+                    th:if="${order.state == 'Đang Vận Chuyển'}">Xem đơn hàng</button>
+            <button class="btn btn-warning status-btn CompleteBtn"
+                    th:data-id = "${order.id}"
+                    th:if="${order.state == 'Hoàn Thành'}">Hoàn Tât</button>
+            <button class="btn btn-secondary  status-btn"
+                    th:if="${order.state == 'Đã Hủy'}"> Đã Hủy</button>
+
+          </div>
+        </div>
+      </div>
+      <!-- Modal for order confirmation -->
+      <div class="modal fade" id="confirmOrderModal" tabindex="-1" role="dialog" aria-labelledby="confirmOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="confirmOrderModalLabel">Xác Nhận Đơn Hàng</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <h3>Chọn Đối Tác Vận Chuyển</h3>
+              <div class="form-group">
+                <label for="transportSelect"><strong>Đối Tác Vận Chuyển:</strong></label>
+                <select id="transportSelect" class="form-control" name="transportId">
+                  <option value="" disabled selected>Chọn Đối Tác</option>
+                  <option th:each="trans : ${transport}" th:value="${trans.id}" th:text="${trans.name}"></option>
+                </select>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+              <button type="button" class="btn btn-primary" id="submitOrderBtn">Xác Nhận</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<div id="urlContainer" th:data-url="@{/orderExport/}"></div>
+<script src = "src/js/delete.js" ></script>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+<script th:src ="@{/src/js/accept-orderExport.js}"></script>
+</body>
+</html>

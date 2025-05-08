@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+  .material-table {
+      width: 100%;
+      border-collapse: collapse;
+  }
+
+  .material-table th, .material-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+  }
+
+  .material-table th {
+      background-color: #f2f2f2;
+  }
+  .form-search{
+    display : flex;
+  }
+  .form-search > div{
+    margin : 5px;
+  }
+  .Categories{
+    display: flex;
+  }
+</style>
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Material Management
+        <small>Manage your materials here</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Material Management</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <div class="box">
+        <h1>Welcome to Material Management</h1>
+        <div class="box-body">
+          <div>
+            <button type="button">
+              <a th:href="@{/AddMaterial}">
+                <i class="fa fa-plus"></i> Add Material
+              </a>
+            </button>
+          </div>
+          <div>
+            <form class = "form-search" th:action = "@{/material}">
+              <div>
+                <input type="text" class="form-control" id="kw" placeholder="Tìm kiếm theo Tên ..." name="name">
+              </div>
+              <div class="Categories">
+                <label for="categoryId" class="form-label">Category: </label>
+                <select class="form-control field-category"  id="categoryId"  name ="category-id">
+                  <option value="" label="-- Chọn Danh Mục --"></option>
+                  <option th:each="category : ${categories}" th:value ="${category.id}" th:text ="${category.name}"></option>
+                </select>
+              </div>
+              <div >
+                <button class="btn btn-info" type="submit">Tìm kiếm</button>
+              </div>
+            </form>
+          </div>
+          <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Unit</th>
+              <th>Weight</th>
+              <th>Category</th>
+              <th>Supplier</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="material : ${materials}">
+              <td th:text="${material.id}"></td>
+              <td th:text="${material.name}"></td>
+              <td th:text="${material.price}"></td>
+              <td th:text="${material.unit}"></td>
+              <td th:text="${material.weight}"></td>
+              <td th:text="${material.categoryId.name}"></td>
+              <td th:text="${material.supplierId.name}"></td>
+              <td>
+                <button type="button" class="btn btn-box-tool" data-widget="edit" data-toggle="tooltip" title="Edit">
+                  <i class="fa fa-pencil"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" th:onclick="deleteS('[[@{/material/{id}(id=${material.id})}]]', [[${material.id}]])"
+                        data-widget="delete" data-toggle="tooltip" title="Delete">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+<style>
+  .table {
+      margin: 5px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .thead-dark th {
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+  }
+
+  .table td, .table th {
+      vertical-align: middle;
+      text-align: center;
+  }
+
+  .active-partner {
+      background-color: #d4edda;
+  }
+
+  .inactive-partner {
+      background-color: #f8d7da;
+  }
+
+  .btn-primary {
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+  }
+
+  .btn-primary:hover {
+      background-color: #0056b3;
+  }
+
+  .box-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+  }
+</style>
+<script src = "src/js/delete.js" ></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-ui.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/adminlte.min.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

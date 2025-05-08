@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>Báo cáo Thống kê Hàng tháng</h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+        <li class="active">Báo cáo</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">Tổng Chi phí và Doanh thu</h3>
+            </div>
+            <div class="col-md-6">
+              <form th:action="@{/report/monthly}" method="get" class="form-inline">
+                <div class="form-group">
+                  <label for="month">Tháng:</label>
+                  <select name="month" id="month" class="form-control" required>
+                    <option value="" disabled selected>Chọn tháng</option>
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                  </select>
+                </div>
+                <div class="box-body" style="width: 80%;">
+                  <canvas id="monthlyReportChart" width="800" height="400"></canvas>
+                </div>
+                <button type="submit" class="btn btn-primary">Xem báo cáo</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<!-- Scripts -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Biểu đồ Chart.js -->
+<script th:inline="javascript">
+  // Lấy dữ liệu từ model
+  const monthlyCosts = /*[[${stats.monthlyCosts}]]*/ [];
+  const monthlyRevenues = /*[[${stats.monthlyRevenues}]]*/ [];
+  
+  // Ghi log ra console để kiểm tra
+  console.log('Chi phí hàng tháng:', monthlyCosts);
+  console.log('Doanh thu hàng tháng:', monthlyRevenues);
+
+  // Thiết lập biểu đồ
+  const ctx = document.getElementById('monthlyReportChart').getContext('2d');
+  const monthlyReportChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+          datasets: [{
+              label: 'Tổng Chi Phí',
+              data: monthlyCosts,
+              backgroundColor: 'rgba(255, 99, 132, 0.6)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 1
+          }, {
+              label: 'Tổng Doanh Thu',
+              data: monthlyRevenues,
+              backgroundColor: 'rgba(54, 162, 235, 0.6)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+</script>
+</body>
+</html>

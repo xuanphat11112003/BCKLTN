@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="layer/head :: head">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+  .importOrder{
+      display : flex;
+      justify-content:space-around;
+  }
+  .importOrder > *{
+        flex : 1;
+  }
+  .btn-material{
+    margin: 5px;
+    padding : 5px;
+    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: hidden;
+    width : 12%;
+    height : 76px;
+  }
+  table {
+    margin : 20px 20px 0 0;
+    height : 10%;
+  }
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  .custom-td {
+    width: 50%;
+  }
+  .form-group{
+    display:flex;
+    justify-content: space-around;
+  }
+  .Categories{
+    display:flex;
+    justify-content: space-around;
+  }
+  .btn-create{
+    padding: 30px;
+    background-color: #4bba4b;
+  }
+  #loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Màu nền xám mờ */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Đảm bảo overlay nằm trên cùng */
+}
+
+#loading-spinner i {
+  font-size: 3rem;
+  color: white;
+  margin-left: 68px;
+}
+
+#loading-spinner p {
+  color: white;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+}
+.modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.modal-content {
+    max-height: 90vh;
+}
+
+
+</style>
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+
+  <div class="content-wrapper">
+    <section class="content-header text-center">
+      <h1>Create Import Order</h1>
+    </section>
+
+    <section class="content">
+      <div class="CreateOrder">
+          <div class="form-group">
+            <div class="Categories">
+              <label for="categoryId" class="form-label">Category: </label>
+              <select class="form-control field-category" th:filed ="*{categoryId}" id="categoryId"  name ="category-id">
+                <option value="" label="-- Chọn Danh Mục --"></option>
+                <option th:each="category : ${categories}" th:value ="${category.id}" th:text ="${category.name}"></option>
+              </select>
+            </div>
+            <div >
+              <input type="text" class="form-control" id="kw" placeholder="Tìm kiếm vật liệu..." name="name">
+            </div>
+            <div >
+              <button class="btn btn-info submit" type="submit">Tìm kiếm</button>
+            </div>
+          </div>
+      </div>
+        <form>
+          <div class="Suppliers">
+            <label for="supplierId" class="form-label">Supplier: </label>
+            <select class="form-control field-supplier" th:filed ="*{supplierId}" onchange="LoadMaterial()" id="supplierId"  name ="supplier-id">
+              <option value="" label="-- Chọn Nhà Cung Cấp --"></option>
+              <option th:each="supplier : ${suppliers}" th:value ="${supplier.id}" th:text ="${supplier.name}"></option>
+            </select>
+          </div>
+          <div class="Payments">
+            <label for="PaymentId" class="form-label">Payment: </label>
+            <select class="form-control field-payment" th:filed ="*{PaymentId}" id="PaymentId"  name ="payment-id">
+              <option th:each="payment : ${payments}" th:value ="${payment.value}" th:text ="${payment.value}"></option>
+            </select>
+          </div>
+        </form>
+        <div class="importOrder">
+          <table>
+            <thead>
+              <tr>
+                <th>Tên Vật Liệu</th>
+                <th> số lượng</th>
+                <th>Giá</th>
+                <th>Tùy Chỉnh</th>
+              </tr>
+            </thead>
+            <tbody id="productList">
+
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="2">Tổng Cộng:</th>
+                <th id="totalPrice">0</th>
+              </tr>
+            </tfoot>
+          </table>
+          <div>
+            <div>
+              <div id="message-container" style="display: block; color: red;">
+                Hãy chọn nhà cung cấp để hiển thị vật liệu.
+              </div>
+              <div>
+                <button class ="btn-create"> Đặt Đơn Hàng</button>
+              </div>
+              <div style="margin-top:10px;">
+                <button id="aiPredictBtn" class="btn btn-warning">📊 AI Dự Đoán Doanh Số</button>
+                <p id="aiPredictionResult" style="margin-top: 10px; font-size: 18px; font-weight: bold;"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Modal hiển thị kết quả dự đoán -->
+        <div class="modal fade" id="predictionModal" tabindex="-1" aria-labelledby="predictionModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="predictionModalLabel">📊 Kết Quả Dự Đoán Doanh Số</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="predictionResult">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-success" id ="acceptOrder">Đặt Hàng</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="confirmOrderModal" tabindex="-1" aria-labelledby="confirmOrderLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-scrollable">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="confirmOrderLabel">📦 Xác Nhận Đơn Hàng</h5>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body" id="confirmOrderDetails"></div>
+              <div class="modal-footer">
+                <button type="button" class="btn-close" data-bs-dismiss="modal">❌ Hủy</button>
+                <button type="button" id="submitOrderBtn" class="btn btn-success">✅ Đặt Hàng</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div id="loading-overlay" style="display: none;">
+      <div id="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Đang tạo đơn hàng, vui lòng đợi...</p>
+      </div>
+    </div>
+  </div>
+
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/adminlte.min.js"></script>
+<div id="url-container" th:data-url="@{/materialBySupplier}"></div>
+<div id="url-container1" th:data-url="@{/import-order}"></div>
+<div id="url-container2" th:data-url="@{/indexImportOrder}"></div>
+<script>
+
+  const LoadMaterial = () => {
+    const baseUrl = document.getElementById('url-container').getAttribute('data-url');
+    var supplierId = document.getElementById("supplierId").value;
+    $('#productList').empty();
+    $('#totalPrice').text(0);
+    if (supplierId) {
+      $.ajax({
+        url: `${baseUrl}/${supplierId}`,
+        method: 'GET',
+        success: function(data) {
+          console.log('Received Data:', data);
+
+          $('#message-container').hide();
+          $('.btn-material').remove();
+
+          // Thêm các nút vật liệu mới
+          data.forEach(function(material) {
+            $('.importOrder > div').append(
+              '<button type="button" ' +
+              'data-id="' + material.id + '" ' +
+              'data-price="' + material.price + '" ' +
+              'data-categoryid="' + material.categoryId + '" ' +
+              'class="btn-material btn btn-primary m-3">' +
+              material.name +
+              '</button>'
+            );
+          });
+        },
+        error: function(xhr, status, error) {
+          console.error('Error fetching materials:', error);
+        }
+      });
+    } else {
+      $('#message-container').show();
+      $('.btn-material').remove();
+    }
+  };
+
+  const LoadPrice = (materialId, materialPrice) => {
+    var $productList = $('#productList');
+    var $existingRow = $productList.find('tr[data-id="' + materialId + '"]');
+    console.log(materialPrice);
+
+    if ($existingRow.length) {
+      var unitPrice = materialPrice;
+      var quantity = parseInt($existingRow.find('input.quantity').val());
+      console.log('Unit Price:', unitPrice);
+      console.log('Quantity:', quantity);
+
+      $existingRow.find('td.custom-td:nth-child(2)').text((unitPrice * quantity).toFixed(2));
+    }
+  };
+  $(document).on('click', '.btn-danger', function() {
+    $(this).closest('tr').remove();
+    calculateTotalPrice();
+  });
+
+  $(document).on('click', '.btn-material', function() {
+  var materialId = $(this).data('id');
+  var materialName = $(this).text();
+  var materialPrice = $(this).data('price');
+
+  var $productList = $('#productList');
+  var $existingRow = $productList.find('tr[data-id="' + materialId + '"]');
+
+  if ($existingRow.length) {
+    var $quantityInput = $existingRow.find('input.quantity');
+    var newQuantity = parseInt($quantityInput.val()) + 1;
+    $quantityInput.val(newQuantity);
+    var unitPrice = parseInt($existingRow.find('td:nth-child(2)').text());
+    console.log(unitPrice);
+    $existingRow.find('td.custom-td:nth-child(2)').text((unitPrice * newQuantity));
+  } else {
+    $productList.append(
+      '<tr data-id="' + materialId + '" data-name="' + materialName + '">' +
+      '<td>' + materialName + '</td>' +
+      '<td class="custom-td">' + materialPrice + '</td>' +
+      '<td class="custom-td"><input type="number" class="form-control quantity" data-price = "'+ materialPrice +'" value="1" min="1" data-id="' + materialId + '"></td>' +
+      '<td class = "custom-td"> <button class = "btn btn-danger">X</button> </td>'+
+      '</tr>'
+    );
+  }
+  calculateTotalPrice();
+});
+  $(document).on('change', '.quantity', function() {
+    var materialId = $(this).data('id');
+    var materialPrice = $(this).data('price');
+    LoadPrice(materialId, materialPrice);
+    calculateTotalPrice();
+  });
+  const calculateTotalPrice = () => {
+  let totalPrice = 0;
+  $('#productList tr').each(function() {
+    const unitPrice = parseInt($(this).find('td:nth-child(2)').text());
+    const quantity = parseInt($(this).find('input.quantity').val());
+
+    if (!isNaN(unitPrice) && !isNaN(quantity)) {
+      totalPrice += unitPrice * quantity;
+    }
+  });
+  $('#totalPrice').text(totalPrice.toFixed(2));
+};
+  $(document).on('click','.btn-create',function(){
+    var payment = document.getElementById("PaymentId").value;
+    const baseUrl = document.getElementById('url-container1').getAttribute('data-url');
+    const baseUrl1 = document.getElementById('url-container2').getAttribute('data-url');
+    var orderDetails = [];
+    $('#productList tr').each(function() {
+        var materialId = $(this).data('id');
+        var materialName = $(this).data('name');
+        var quantity = parseInt($(this).find('input.quantity').val());
+        var price = parseInt($(this).find('td:nth-child(2)').text());
+
+        // Thêm chi tiết vật liệu vào danh sách
+        orderDetails.push({
+            materialID: materialId,
+            quantity: quantity,
+            totalamout: price,
+            materialName: materialName
+        });
+    });
+    if (orderDetails.length === 0) {
+      alert('vui lòng chọn vật liệu để tạo đơn hàng');
+      return;
+    }
+    var totalPrice = parseInt($('#totalPrice').text());
+    var orderData = {
+        totalCost: totalPrice,
+        payment: payment,
+        detail: orderDetails
+    };
+    $('#loading-overlay').show();
+    console.log(orderData);
+    $.ajax({
+        url: baseUrl,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(orderData),
+        success: function(response) {
+            $('#loading-overlay').hide();
+            alert('Order created successfully!');
+            window.location.href = baseUrl1;
+        },
+        error: function(xhr, status, error) {
+            $('#loading-overlay').hide();
+            alert('An error occurred while creating the order.');
+            console.error('Error creating order:', error);
+        }
+    });
+  });
+  $(document).on('click', '.submit', function(e) {
+    e.preventDefault();
+    filterMaterials();
+});
+  const filterMaterials = () => {
+    const searchTerm = $('#kw').val().toLowerCase();
+    const selectedCategory = $('#categoryId').val();
+    console.log(searchTerm);
+    $('.btn-material').each(function() {
+        const materialName = $(this).text().toLowerCase();
+        const materialCategory = $(this).data('categoryid');
+
+
+        if (materialName.includes(searchTerm) &&
+            (selectedCategory === "" || materialCategory == selectedCategory)) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+}
+
+
+</script>
+<script th:src = "@{/src/js/SalesForecast.js}"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>Thêm Chi Phí</h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+        <li class="active">Thêm Chi Phí</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Thông tin chi phí</h3>
+        </div>
+        <div class="box-body">
+          <form th:action="@{/cost/add}" th:object="${costs}" method="post">
+            <div class="form-group">
+              <label for="name">Tên Chi Phí:</label>
+              <input type="text" id="name" th:field="*{name}" class="form-control" required />
+              <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+            </div>
+            <div class="form-group">
+              <label for="type">Loại:</label>
+              <select id="type" th:field="*{type}" class="form-control" required>
+                <option value="" disabled selected>Chọn loại chi phí</option>
+                <option value="Transport">Vận Chuyển</option>
+                <option value="Warehouse">Kho Bãi</option>
+              </select>
+              <div th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="text-danger"></div>
+            </div>
+            <div class="form-group">
+              <label for="price">Giá:</label>
+              <input type="number" id="price" th:field="*{price}" class="form-control" required />
+              <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger"></div>
+            </div>
+            <button type="submit" class="btn btn-success">Thêm Chi Phí</button>
+            <a href="@{/cost}" class="btn btn-secondary">Hủy</a>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace = "layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+  <div th:replace = "layer/header :: header"></div>
+  <div th:replace = "layer/sidebar :: aside"></div>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Nhà Kho
+        <small>Xem Kho Hàng</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> WareHouse</a></li>
+        <li><a href="#">Warehouse</a></li>
+        <li class="active">Stock</li>
+      </ol>
+    </section>
+    <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Danh sách các nhà kho</h3>
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <!-- Sử dụng Thymeleaf để lặp qua danh sách nhà kho -->
+                <div th:each="warehouse : ${warehouses}" class="col-md-3">
+                  <div class="box box-primary">
+                    <div class="box-header">
+                      <h4 th:text="${warehouse.name}"></h4>
+                    </div>
+                    <div class="box-body">
+                      <p><strong>Địa chỉ:</strong> <span th:text="${warehouse.address}"></span></p>
+                      <!-- Thêm nút chi tiết nếu cần -->
+                      <a th:href="@{/inventory/view/{id}(id=${warehouse.id},stockType='materialstock')}" class="btn btn-primary">Xem chi tiết</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div th:replace = "layer/footer :: footer" ></div>
+
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+</body>
+</html>

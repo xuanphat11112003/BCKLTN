@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+    .content-wrapper {
+        flex: 1;
+        overflow-y: auto;
+    }
+    .charts-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        gap: 20px;
+        height: 100%;
+    }
+    #monthlyReportChartContainer {
+        grid-column: 1;
+    }
+    .small-charts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .box {
+        height: 100%; /* Full height of the grid cell */
+    }
+</style>
+<div class="wrapper">
+    <div th:replace="layer/header :: header"></div>
+    <div th:replace="layer/sidebar :: aside"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>Báo cáo Thống kê Hàng tháng</h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+                <li class="active">Báo cáo</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box box-primary" id="monthlyReportChartContainer">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Tổng Chi phí và Doanh thu</h3>
+                        </div>
+                        <div class="box-body">
+                            <canvas id="monthlyReportChart" width="300" height="150"></canvas>
+                        </div>
+                    </div>
+                    <div class="small-charts">
+                        <div class="box box-primary" id="performanceChartContainer">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Đánh Giá Nhà Cung Cấp</h3>
+                            </div>
+                            <div class="box-body">
+                                <canvas id="performanceChart" width="100" height="50"></canvas>
+                            </div>
+                        </div>
+                        <div id="extraChartContainer" class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Biểu đồ sản phẩm đã sản xuất</h3>
+                            </div>
+                            <div class="box-body">
+                                <canvas id="productProductionChart" width="100" height="50"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<!-- Scripts -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Biểu đồ Chart.js -->
+<script th:inline="javascript">
+    // Lấy dữ liệu từ model
+    const monthlyCosts = /*[[${stats.monthlyCosts}]]*/ [];
+    const monthlyRevenues = /*[[${stats.monthlyRevenues}]]*/ [];
+
+    // Ghi log ra console để kiểm tra
+    console.log('Chi phí hàng tháng:', monthlyCosts);
+    console.log('Doanh thu hàng tháng:', monthlyRevenues);
+
+    // Thiết lập biểu đồ cho Tổng Chi phí và Doanh thu
+    const ctx = document.getElementById('monthlyReportChart').getContext('2d');
+    const monthlyReportChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+            datasets: [{
+                label: 'Tổng Chi Phí',
+                data: monthlyCosts,
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }, {
+                label: 'Tổng Doanh Thu',
+                data: monthlyRevenues,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Thiết lập biểu đồ cho Đánh Giá Nhà Cung Cấp
+    var supplierStats = /*[[${supplierStats}]]*/ [];
+    var supplierNames = supplierStats.map(s => s.name);
+    var totalRatings = supplierStats.map(s => s.deliveryRatings + s.qualityRatings + s.priceRatings);
+
+    var ctx1 = document.getElementById('performanceChart').getContext('2d');
+    var performanceChart = new Chart(ctx1, {
+        type: 'pie',
+        data: {
+            labels: supplierNames,
+            datasets: [{
+                label: 'Tổng Đánh Giá',
+                data: totalRatings,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+
+
+    var productProductionData = /*[[${productProductionData}]]*/ [];
+    var productNames = productProductionData.map(p => p.name);
+    var productQuantities = productProductionData.map(p => p.quantity);
+
+    var ctx2 = document.getElementById('productProductionChart').getContext('2d');
+    var productProductionChart = new Chart(ctx2, {
+        type: 'polarArea',  // Biểu đồ Polar Area
+        data: {
+            labels: productNames,
+            datasets: [{
+                label: 'Sản phẩm đã sản xuất',
+                data: productQuantities,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

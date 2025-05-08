@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>Create User</h1>
+    </section>
+
+    <section class="content">
+      <div class="box">
+        <div class="box-body">
+          <div class="form-group">
+            <label for="userRole">User Role:</label>
+            <select id="userRole" class="form-control" onchange="toggleFields()" required>
+              <option value="">Select Role</option>
+              <option value="ROLE_EMPLOYEE">Employee</option>
+              <option value="ROLE_USER">Manager</option>
+            </select>
+          </div>
+
+          <!-- Form for Employee -->
+          <form id="employeeForm"
+                th:action="@{/employee}" th:object="${employee}" method="post" enctype="multipart/form-data" style="display:none;">
+            <h3>Employee Form</h3>
+            <div th:if="${#fields.hasErrors()}" class="alert alert-danger" role="alert">
+              <ul>
+                <li th:each="error : ${#fields.errors()}" th:text="${error}"></li>
+              </ul>
+            </div>
+
+            <!-- Avatar -->
+            <div class="form-group">
+              <label for="avatarid">Avatar:</label>
+              <input type="file" id="avatarid" class="form-control" th:field="*{useridE.file}" >
+            </div>
+
+            <!-- Username -->
+            <div class="form-group">
+              <label for="usernameid">Username:</label>
+              <input type="text" id="usernameid" class="form-control" th:field="*{useridE.username}" required>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label for="passwordid">Password:</label>
+              <input type="password" id="passwordid" class="form-control" th:field="*{useridE.password}" required>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="emailid">Email:</label>
+              <input type="email" id="emailid" class="form-control" th:field="*{useridE.email}" required>
+            </div>
+
+            <!-- Firstname -->
+            <div class="form-group">
+              <label for="firstnameid">First Name:</label>
+              <input type="text" id="firstnameid" class="form-control" th:field="*{useridE.firstname}" required>
+            </div>
+
+            <!-- Lastname -->
+            <div class="form-group">
+              <label for="lastnameid">Last Name:</label>
+              <input type="text" id="lastnameid" class="form-control" th:field="*{useridE.lastname}" required>
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+              <label for="addressid">Address:</label>
+              <input type="text" id="addressid" class="form-control" th:field="*{useridE.address}" required>
+            </div>
+
+            <!-- Warehouse (Employee-specific) -->
+            <div class="form-group">
+              <label for="warehouse">Warehouse:</label>
+              <select id="warehouse" class="form-control" th:field="*{position}">
+                <option th:each="warehouse : ${warehouses}" th:value="${warehouse.id}" th:text="${warehouse.name}"></option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn-primary">Save Employee</button>
+          </form>
+
+          <!-- Form for Manager -->
+          <form id="managerForm" action="/manager" th:action="@{/manager}" th:object="${manager}" method="post" enctype="multipart/form-data" style="display:none;">
+            <h3>Manager Form</h3>
+            <div th:if="${#fields.hasErrors()}" class="alert alert-danger" role="alert">
+              <ul>
+                <li th:each="error : ${#fields.errors()}" th:text="${error}"></li>
+              </ul>
+            </div>
+
+            <!-- Avatar -->
+            <div class="form-group">
+              <label for="avatar">Avatar:</label>
+              <input type="file" id="avatar" class="form-control" th:field="*{user.file}" required>
+            </div>
+
+            <!-- Username -->
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input type="text" id="username" class="form-control" th:field="*{user.username}" required>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" id="password" class="form-control" th:field="*{user.password}" required>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" class="form-control" th:field="*{user.email}" required>
+            </div>
+
+            <!-- Firstname -->
+            <div class="form-group">
+              <label for="firstname">First Name:</label>
+              <input type="text" id="firstname" class="form-control" th:field="*{user.firstname}" required>
+            </div>
+
+            <!-- Lastname -->
+            <div class="form-group">
+              <label for="lastname">Last Name:</label>
+              <input type="text" id="lastname" class="form-control" th:field="*{user.lastname}" required>
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+              <label for="address">Address:</label>
+              <input type="text" id="address" class="form-control" th:field="*{user.address}" required>
+            </div>
+
+            <!-- Manager-specific fields -->
+            <div class="form-group">
+              <label for="createdate">Created Date:</label>
+              <input type="date" id="createdate" class="form-control" th:field="*{createdate}">
+            </div>
+
+            <div class="form-group">
+              <label for="endDate">End Date:</label>
+              <input type="date" id="endDate" class="form-control" th:field="*{endDate}">
+            </div>
+
+            <button type="submit" class="btn-primary">Save Manager</button>
+          </form>
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/adminlte.min.js"></script>
+<script>
+  // JavaScript to toggle between forms
+  function toggleFields() {
+      const role = document.getElementById('userRole').value;
+      const employeeForm = document.getElementById('employeeForm');
+      const managerForm = document.getElementById('managerForm');
+
+      // Hide both forms initially
+      employeeForm.style.display = 'none';
+      managerForm.style.display = 'none';
+
+      // Show the form based on role selection
+      if (role === 'ROLE_EMPLOYEE') {
+          employeeForm.style.display = 'block';
+      } else if (role === 'ROLE_USER') {
+          managerForm.style.display = 'block';
+      }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Import Order Invoice</title>
+</head>
+<body>
+<h1>Import Order Invoice</h1>
+<p>Dear <span th:text="${creatorName}"></span>,</p>
+<p>Order ID: <span th:text="${orderId}"></span></p>
+<p>Total Cost: <span th:text="${totalCost}"></span></p>
+<p>Order Date: <span th:text="${orderDate}"></span></p>
+<p>Please find the attached invoice for the import order.</p>
+<p>Best regards,</p>
+<p>Your Team</p>
+</body>
+</html>
+

@@ -1,0 +1,103 @@
+version: "3.1"
+
+stories:
+
+  - story: happy path
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: mood_great
+      - action: utter_happy
+
+  - story: sad path 1
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: mood_unhappy
+      - action: utter_cheer_up
+      - action: utter_did_that_help
+      - intent: affirm
+      - action: utter_happy
+
+  - story: sad path 2
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: mood_unhappy
+      - action: utter_cheer_up
+      - action: utter_did_that_help
+      - intent: deny
+      - action: utter_goodbye
+
+  - story: Price inquiry
+    steps:
+      - intent: ask_price
+      - action: action_show_price
+
+  - story: Category inquiry
+    steps:
+      - intent: ask_category
+      - action: action_show_category
+
+  - story: Image inquiry
+    steps:
+      - intent: ask_image
+      - action: action_show_image
+
+  - story: user asks for product details
+    steps:
+      - intent: ask_product_details
+      - action: action_show_product_details
+
+  - story: User asks for product review
+    steps:
+      - intent: ask_review
+      - action: action_show_review
+
+  - story: User asks for product review and follows up
+    steps:
+      - intent: ask_review
+      - action: action_show_review
+      - intent: ask_price
+      - action: action_show_price
+  - story: User asks about storage guide
+    steps:
+      - intent: ask_storage
+      - action: action_show_storage_guide
+
+  - story: User asks about storage guide and follows up with a review
+    steps:
+      - intent: ask_storage
+      - action: action_show_storage_guide
+      - intent: ask_review
+      - action: action_show_review
+  - story: User asks about storage guide and follows up with price
+    steps:
+      - intent: ask_storage
+      - action: action_show_storage_guide
+      - intent: ask_price
+      - action: action_show_price
+  - story: User asks about storage guide and similar products
+    steps:
+      - intent: ask_storage
+      - action: action_show_storage_guide
+      - intent: ask_related_products
+      - action: action_suggest_similar_products
+  - story: User asks about return policy
+    steps:
+      - intent: ask_return_policy
+      - action: action_return_policy
+
+  - story: User asks about return policy and follows up with another question
+    steps:
+      - intent: ask_return_policy
+      - action: action_return_policy
+      - intent: ask_storage
+      - action: action_show_storage_guide
+
+  - story: User asks about return policy and then about price
+    steps:
+      - intent: ask_return_policy
+      - action: action_return_policy
+      - intent: ask_price
+      - action: action_show_price

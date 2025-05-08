@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+  .invoice-container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #eee;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+      font-size: 16px;
+      line-height: 24px;
+      font-family: 'Helvetica', Helvetica, Arial, sans-serif;
+      color: #555;
+      margin-bottom: 30px;
+  }
+
+  .invoice-container table {
+      width: 100%;
+      line-height: inherit;
+      text-align: left;
+  }
+
+  .invoice-container table td {
+      padding: 5px;
+      vertical-align: top;
+  }
+
+  .invoice-container table tr td:nth-child(2) {
+      text-align: right;
+  }
+
+  .invoice-container table tr .top table td {
+      padding-bottom: 20px;
+  }
+
+  .invoice-container table tr .information table td {
+      padding-bottom: 20px;
+  }
+
+  .invoice-container table tr .heading td {
+      background: #eee;
+      border-bottom: 1px solid #ddd;
+      font-weight: bold;
+  }
+
+  .invoice-container table tr.item td {
+      border-bottom: 1px solid #eee;
+  }
+
+  .invoice-container table tr.item.last td {
+      border-bottom: none;
+  }
+
+  .invoice-container table tr.total td:nth-child(2) {
+      border-top: 2px solid #eee;
+      font-weight: bold;
+  }
+
+  .status-btn {
+      margin-top: 15px;
+  }
+  .choice{
+        display : flex;
+  }
+  .choice > div{
+        margin : 5px;
+  }
+</style>
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>Danh sách hóa đơn sản xuất</h1>
+    </section>
+    <section class="content">
+      <div>
+        <a class="btn btn-info m-1" th:href="@{/manufacture/order}">Tạo đơn Sản Xuất</a>
+      </div>
+      <div class = "filterOrder">
+        <form th:action ="@{/orderManufacture}">
+          <div class = "choice">
+            <div>
+              <select class="form-control field-DateOrder"   name ="sortDirection">
+                <option value="asc" label="Tăng Dần Theo Ngày"></option>
+                <option value="desc" label="Giảm dần theo ngày"></option>
+              </select>
+            </div>
+            <div>
+              <input type="text" class="form-control" id="kw" placeholder="Tìm kiếm đơn hàng..." name="id">
+            </div>
+            <div>
+              <select class="form-control field-"   name ="active">
+                <option value="" label="---Lọc Theo Xác Nhận----"></option>
+                <option value="true" label="Đã Xác Nhận"></option>
+                <option value="false" label="Chưa Xác Nhận"></option>
+              </select>
+            </div>
+
+            <div>
+              <select class="form-control field-category"   name ="transaction">
+                <option value="" label="-- Lọc Theo trạng thái xử lý --"></option>
+                <option th:each="trans : ${transactions}" th:value="${trans.value}" th:label="${trans.value}"></option>
+              </select>
+            </div>
+            <div >
+              <button class="btn btn-info" type="submit">Tìm kiếm</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div th:each="order : ${orderList}" class="invoice-container">
+        <table>
+          <tr class="top">
+            <td colspan="2">
+              <table>
+                <tr>
+                  <td>
+                    <strong>ID Hóa đơn:</strong> <span th:text="${order.id}"></span><br>
+                    <strong>Ngày tạo:</strong> <span th:text="${#dates.format(order.create_date, 'dd/MM/yyyy')}"></span><br>
+                    <strong>Người đặt hàng:</strong> <span th:text="${order.orderByName}"></span><br>
+                    <strong>Kho hàng:</strong> <span th:text="${order.wareHouseName}"></span><br>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr class="heading">
+            <td>Trạng thái giao dịch</td>
+            <td th:text="${order.transaction}"></td>
+          </tr>
+
+
+          <tr class="heading">
+            <td style="font-weight: bold;">Sản phẩm</td>
+            <td style="font-weight: bold;">Số lượng</td>
+          </tr>
+
+          <!-- Loop qua danh sách sản phẩm cho mỗi đơn hàng -->
+          <tr th:each="detail : ${order.details}" class="item">
+            <td th:text="${detail.productName}"></td>
+            <td th:text="${detail.quantity}"></td>
+          </tr>
+          <tr class="details">
+            <td>
+              <button class="btn btn-primary status-btn acceptOrder"
+                      th:data-order = "${jsonOrderList}"
+                      th:data-id = "${order.id}"
+                      th:if="${order.transaction == 'Đang đợi hàng về'}">Tạo Đơn Hàng</button>
+              <button class="btn btn-danger status-btn deleteOrder"
+                      th:data-id = "${order.id}" style="margin-left : 10px;"
+                      th:if="${order.transaction == 'Đang đợi hàng về'}">Xóa</button>
+              <button class="btn btn-info status-btn ProcessBtn"
+                      th:data-id = "${order.id}"
+                      th:if="${order.transaction == 'Đã Nhận'}">Tiến hành sản xuất</button>
+              <button class="btn btn-warning status-btn CompleteBtn"
+                      th:data-id = "${order.id}"
+                      th:if="${order.transaction == 'Đang thực hiện'}">Xác nhận hoàn thành</button>
+              <button class="btn btn-success status-btn" th:if="${order.transaction == 'Đã hoàn tất'}">Hoàn thành</button>
+            </td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+      <!-- Kết thúc vòng lặp hóa đơn -->
+    </section>
+  </div>
+
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<!-- jQuery 3 -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+<div id="urlContainer" th:data-url="@{/orderManufacture}"></div>
+<div id="urlContainer1" th:data-url="@{/productStock}"></div>
+<script th:src = "@{/src/js/accept-orderManufacture.js}" ></script>
+</body>
+</html>

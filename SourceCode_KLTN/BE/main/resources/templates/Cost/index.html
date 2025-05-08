@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>Danh sách chi phí</h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+        <li class="active">Chi phí</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">Chi phí</h3>
+          <!-- Nút thêm chi phí -->
+          <a th:href="@{/cost/add}" class="btn btn-primary pull-right">Thêm Chi Phí</a>
+        </div>
+        <div class="box-body">
+          <table class="table table-bordered">
+            <thead class="thead-dark">
+            <tr>
+              <th>ID</th>
+              <th>Tên</th>
+              <th>Loại</th>
+              <th>Giá</th>
+              <th>Tùy Chỉnh</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cost : ${costs}">
+              <td th:text="${cost.id}"></td>
+              <td th:text="${cost.name}"></td>
+              <td th:text="${cost.type}"></td>
+              <td th:text="${#numbers.formatDecimal(cost.price, 0, 0)}"></td>
+              <td>
+                <button type="button" class="btn btn-box-tool" data-widget="edit" title="Edit">
+                  <i class="fa fa-pencil"></i>
+                </button>
+                <button type="button" class="btn btn-box-tool" th:onclick="deleteS('[[@{/cost/{id}(id=${cost.id})}]]', [[${cost.id}]])" data-widget="delete" title="Delete">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div th:replace="layer/footer :: footer"></div>
+
+</div>
+<style>
+  .table {
+      margin: 5px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .thead-dark th {
+      background-color: #343a40;
+      color: white;
+      text-align: center;
+  }
+
+  .table td, .table th {
+      vertical-align: middle;
+      text-align: center;
+  }
+
+  .active-partner {
+      background-color: #d4edda;
+  }
+
+  .inactive-partner {
+      background-color: #f8d7da;
+  }
+
+  .btn-primary {
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+  }
+
+  .btn-primary:hover {
+      background-color: #0056b3;
+  }
+
+  .box-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+  }
+</style>
+<script src = "src/js/delete.js" ></script>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+</body>
+</html>

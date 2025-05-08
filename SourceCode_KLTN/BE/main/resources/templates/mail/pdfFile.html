@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Import Order Invoice</title>
+    <style>
+        /* Basic styles for the invoice */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .invoice-table th, .invoice-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .invoice-table th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        .total-row {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Import Order Invoice</h1>
+    </div>
+    <p>Date: <span th:text="${orderDate}"></span></p>
+    <p>Order ID: <span th:text="${orderId}"></span></p>
+    <p>Total Cost: <span th:text="${totalCost}"></span></p>
+    <table class="invoice-table">
+        <thead>
+        <tr>
+            <th>Material</th>
+            <th>Quantity</th>
+            <th>Total Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate over details and display them -->
+        <tr th:each="detail : ${details}">
+            <td th:text="${detail.materialName}"></td>
+            <td th:text="${detail.quantity}"></td>
+            <td th:text="${detail.totalamout}"></td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr class="total-row">
+            <td colspan="2">Total Cost</td>
+            <td th:text="${totalCost}"></td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+</body>
+</html>

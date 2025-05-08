@@ -1,0 +1,17 @@
+{
+  "0": "affirm",
+  "1": "ask_category",
+  "2": "ask_image",
+  "3": "ask_price",
+  "4": "ask_product_details",
+  "5": "ask_related_products",
+  "6": "ask_return_policy",
+  "7": "ask_review",
+  "8": "ask_storage",
+  "9": "bot_challenge",
+  "10": "deny",
+  "11": "goodbye",
+  "12": "greet",
+  "13": "mood_great",
+  "14": "mood_unhappy"
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>Inventory Overview</h1>
+    </section>
+
+    <section class="content">
+      <div class="box">
+        <div class="box-header">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" th:href="@{/inventory/view/{id}(id=${warehouseId}, stockType='materialstock')}" >Material Stock</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/inventory/view/{id}(id=${warehouseId}, stockType='productstock')}" >Product Stock</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="box-body">
+          <div class="search-container">
+            <form th:action="@{/inventory/view/{id}(id=${warehouseId})}" method="get">
+              <input type="text" id="searchInput" name="name" placeholder="Search by name..." />
+              <input type="hidden" name="stockType" th:value="${param.stockType}" />
+              <button type="submit">Search</button>
+            </form>
+          </div>
+
+          <table class="table table-bordered" id="inventoryTable">
+            <thead>
+            <tr>
+              <th>Entry Date</th>
+              <th>Warehouse Name</th>
+              <th>Name</th>
+              <th>Amount</th>
+              <th th:if="${stockType == 'materialstock'}">Material ID</th>
+              <th th:if="${stockType == 'materialstock'}">Date Expire</th>
+              <th th:if="${stockType == 'materialstock'}">Active</th>
+              <th th:if="${stockType == 'materialstock'}">Remain</th>
+            </tr>
+            </thead>
+            <tbody id="inventoryBody">
+            <tr th:each="item : ${inventoryRequests}">
+              <td th:text="${item.entryDate}"></td>
+              <td th:text="${item.wareHouseName}"></td>
+
+              <td>
+                <ul th:if="${item.materialStock != null}">
+                  <li th:each="stock : ${item.materialStock}" th:text="${stock.materialName}"></li>
+                </ul>
+                <ul th:if="${item.productStockRequests != null}">
+                  <li th:each="product : ${item.productStockRequests}" th:text="${product.productName}"></li>
+                </ul>
+              </td>
+
+              <td>
+                <ul th:if="${item.materialStock != null}">
+                  <li th:each="stock : ${item.materialStock}" th:text="${stock.amount}"></li>
+                </ul>
+                <ul th:if="${item.productStockRequests != null}">
+                  <li th:each="product : ${item.productStockRequests}" th:text="${product.amount}"></li>
+                </ul>
+              </td>
+
+              <td th:if="${stockType == 'materialstock'}" th:text="${item.materialStock[0].materialId}"></td>
+              <td th:if="${stockType == 'materialstock'}">
+                <div th:each="stock : ${item.materialStock}">
+                  <span th:if="${stock.date_expire != null}"
+                        th:text="${#dates.format(stock.date_expire, 'dd/MM/yyyy')}">
+                  </span>
+                </div>
+                <button th:if="${item.materialStock[0].date_expire == null}" type="button" class="btn btn-primary" th:onclick="| window.location.href = '@{/updateDateExpire/{id}(id=${item.id})}' |">
+                  Cập nhật ngày hết hạn
+                </button>
+              </td>
+              <td th:if="${stockType == 'materialstock'}" th:text="${item.materialStock[0].active ? 'Yes' : 'No'}"></td>
+              <td th:if="${stockType == 'materialstock'}" th:text="${item.materialStock[0].remain}"></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+
+
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+<script th:inline="javascript" th:src= "@{/src/js/update-inventory.js}" ></script>
+
+</body>
+</html>

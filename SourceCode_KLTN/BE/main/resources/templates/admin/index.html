@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+    .box-tools {
+        position: absolute;
+        top: 50%;
+        right: 0;
+    }
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .flex-item {
+        background: linear-gradient(to bottom, rgb(0 114 255 / 10%), rgb(230 230 230));
+        width: calc(50% - 10px);
+        margin-bottom: 20px;
+        border-radius: 0.5rem;
+    }
+    .box-title{
+        border-radius : 0.5rem;
+        padding-bottom : 5px;
+    }
+    .box-title > a {
+        margin : 5px;
+    }
+
+</style>
+<div class="wrapper">
+    <div th:replace="layer/header :: header"></div>
+    <div th:replace="layer/sidebar :: aside"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                Trang Chủ
+                <small>mọi thứ bắt đầu ở đây</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Trang chủ</a></li>
+                <li><a href="#">Ví dụ</a></li>
+                <li class="active">Trang Chủ</li>
+            </ol>
+        </section>
+
+        <section class="content flex-container">
+
+            <!-- Cụm 1: Sản phẩm, Vật liệu, và Sản xuất -->
+            <div class="box flex-item">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Sản phẩm, Vật liệu và Sản xuất</h3>
+                </div>
+                <div class="box-body">
+                    <div class="box">
+                        <h3 class="box-title"><a th:href="@{/SeeProduct}">Sản phẩm</a></h3>
+                        <div class="box-tools pull-right">
+                            <a type="button" th:href="@{/AddProduct}">
+                                <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <h3 class="box-title"><a th:href="@{/material}">Vật liệu</a></h3>
+                        <div class="box-tools pull-right">
+                            <a type="button" th:href="@{/AddMaterial}">
+                                <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <h3 class="box-title"><a th:href="@{/manufacture/index}">Sản xuất</a></h3>
+                        <div class="box-tools pull-right">
+                            <a type="button" th:href="@{/manufacture/add}">
+                                <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cụm 2: Chi phí, Đơn sản xuất -->
+            <div class="box flex-item">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Chi phí và Đơn sản xuất</h3>
+                </div>
+                <div class="box-body">
+                    <div class="box">
+                        <h3 class="box-title"><a th:href="@{/cost}">Chi phí</a></h3>
+                        <div class="box-tools pull-right">
+                            <a type="button" th:href="@{/cost/add}">
+                                <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <h3 class="box-title"><a th:href="@{/orderManufacture}">Đơn sản xuất</a></h3>
+                        <div class="box-tools pull-right">
+                            <a type="button" th:href="@{/manufacture/order}">
+                                <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="box">
+                            <h3 class="box-title"><a th:href="@{/orderExport/index}">Xuất đơn hàng</a></h3>
+                            <div class="box-tools pull-right">
+                                <a type="button" th:href="@{/orderExport}">
+                                    <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                                </a>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cụm 3: Nhà cung cấp, Danh mục -->
+            <div class="box flex-item">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Nhà cung cấp và Danh mục</h3>
+                </div>
+                <div class="box-body">
+                    <div class="box">
+                        <h3 class="box-title"><a th:href="@{/supplier}">Nhà cung cấp</a></h3>
+                        <div class="box-tools pull-right">
+                            <a type="button" th:href="@{/add-supplier}">
+                                <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <h3 class="box-title"><a th:href="@{/categories}">Danh mục</a></h3>
+                        <div class="box-tools pull-right">
+                            <a type="button" th:href="@{/add-category}">
+                                <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cụm 4: Đơn nhập hàng và Kho hàng -->
+            <div class="box flex-item">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Đơn nhập hàng và Kho hàng</h3>
+                </div>
+                <div class="box-body">
+                    <div class="box">
+                        <h3 class="box-title"><a th:href="@{/indexImportOrder}">Đơn nhập hàng</a></h3>
+                        <div class="box-tools pull-right">
+                            <a type="button" th:href="@{/import-order}">
+                                <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <h3 class="box-title"><a th:href="@{/warehouse}">Kho hàng</a></h3>
+                        <div class="box-tools pull-right">
+                            <a type="button" th:href="@{/warehouse/add}">
+                                <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cụm 5: Tồn kho và Đối tác -->
+            <div class="box flex-item">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Tồn kho và Đối tác</h3>
+                </div>
+                <div class="box-body">
+                    <div class="box">
+                        <h3 class="box-title"><a th:href="@{/inventory}">Tồn kho</a></h3>
+                        <div class="box-tools pull-right">
+                            <a type="button" th:href="@{/manufacture/order}">
+                                <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <h3 class="box-title"><a th:href="@{/partners}">Đối tác</a></h3>
+                        <div class="box-tools pull-right">
+                            <a type="button" th:href="@{/partners/add}">
+                                <button class="btn btn-box-tool"><i class="fa fa-plus"></i></button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+    <div th:replace="layer/footer :: footer"></div>
+</div>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <div th:replace="layer/header :: header"></div>
+    <div th:replace="layer/sidebar :: aside"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                Đánh Giá Nhà Cung Cấp
+            </h1>
+        </section>
+        <div>
+           <span>OrderID: </span><span th:text="${oid}">OrderID:</span>
+        </div>
+
+        <section class="content">
+            <div class="box box-primary">
+                <div class="box-body">
+                    <form id="evaluationForm"  >
+
+                        <!-- Đánh giá giao hàng -->
+                        <div class="form-group">
+                            <label for="deliveryRating">Đánh Giá Giao Hàng:</label>
+                            <input type="range" min="0" max="100" step="1" class="form-range" id="deliveryRating" name="deliveryRating" oninput="updateOutput(this)">
+                            <output for="deliveryRating">50</output>%
+                        </div>
+
+                        <!-- Đánh giá chất lượng -->
+                        <div class="form-group">
+                            <label for="qualityRating">Đánh Giá Chất Lượng:</label>
+                            <input type="range" min="0" max="100" step="1" class="form-range" id="qualityRating" name="qualityRating" oninput="updateOutput(this)">
+                            <output for="qualityRating">50</output>%
+                        </div>
+
+                        <!-- Đánh giá giá cả -->
+                        <div class="form-group">
+                            <label for="priceRating">Đánh Giá Về Giá Cả:</label>
+                            <input type="range" min="0" max="100" step="1" class="form-range" id="priceRating" name="priceRating" oninput="updateOutput(this)">
+                            <output for="priceRating">50</output>%
+                        </div>
+
+                        <!-- Nhận xét -->
+                        <div class="form-group">
+                            <label for="comment">Nhận Xét:</label>
+                            <input type="text" class="form-control" id="comment" name="comment" placeholder="Đánh Giá Chi Tiết...">
+                        </div>
+
+                        <!-- Hidden fields -->
+                        <input type="hidden" th:value="${oid}" name="orderId">
+                        <input type="hidden" th:value="${sup}" name="supplier">
+
+                        <!-- Nút submit -->
+                        <button type="button" class="btn btn-success" id="submitBtn" onclick="submitForm()">Đánh giá</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="layer/footer :: footer"></div>
+</div>
+<div id="url-container" th:data-url="@{/supplier/evaluate}"></div>
+<!-- Scripts -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+
+<script>
+    function updateOutput(element) {
+        const output = element.nextElementSibling;
+        output.value = element.value;
+    }
+
+    function submitForm() {
+        const baseUrl = document.getElementById('url-container').getAttribute('data-url');
+        const form = document.getElementById('evaluationForm');
+        const formData = new FormData(form);
+        const data = {
+            deliveryRating: parseInt(formData.get('deliveryRating'),10),
+            qualityRating: parseInt(formData.get('qualityRating'),10),
+            priceRating: parseInt(formData.get('priceRating'),10),
+            comment: formData.get('comment'),
+            orderId: [[${oid}]],
+            supplierId: [[${sid}]]
+
+        };
+        console.log(data);
+        fetch(baseUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            if (window.confirm('Lưu thành công. Bạn có muốn trở về trang chủ không?')) {
+                window.location.href = '/chuoicungung/admin'; // Thay đổi URL nếu cần
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+</body>
+</html>

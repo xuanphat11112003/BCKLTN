@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+    .info-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+    .info-item {
+        flex: 1 1 50%; /* Adjusts to take up half the width */
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    .info-item strong {
+        display: inline-block;
+        width: 150px; /* Fixed width for labels */
+    }
+    .box {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    h3 {
+        margin-top: 20px;
+    }
+    .listContent{
+      border-radius: 0.5rem;
+      border: 1px solid;
+      padding: 10px;
+      margin: 15px;
+    }
+    .search-container {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+  }
+
+  .search-form {
+      display: flex;
+      align-items: center; /* Căn giữa các phần tử dọc */
+  }
+
+  .search-form .form-control {
+      margin-right: 10px;
+      flex: 1;
+      min-width: 150px;
+  }
+
+  .search-form button {
+      margin-left: 10px;
+  }
+    .no-orders {
+          text-align: center;
+          position: absolute;
+          top: 67%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: #222d32;
+          width: 100%;
+          height: 66%;
+          padding-top: 10%;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(128, 128, 128, 0.7) 100%);
+      }
+
+      .no-orders i {
+          font-size: 100px;
+          margin-bottom: 20px;
+      }
+
+      .no-orders h2 {
+          font-size: 24px;
+          margin-bottom: 10px;
+      }
+    .modal-backdrop{
+        z-index: 0 !important;
+
+    }
+
+</style>
+
+</style>
+<div class="wrapper">
+    <div th:replace="layer/header :: header"></div>
+    <div th:replace="layer/sidebar :: aside"></div>
+
+    <div  class="content-wrapper" style = "position : relative;">
+        <section th:if="${warehouse !=null}" class="content-header">
+            <div class="info-item">
+                <strong>Kho Hàng:</strong>
+                <span th:text="${warehouse.name}"></span>
+            </div>
+            <div class="info-item">
+                <strong>Địa Chỉ Kho:</strong>
+                <span th:text="${warehouse.address}"></span>
+            </div>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Trang Chủ</a></li>
+                <li class="active">Hóa Đơn</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div>
+                <div class="box-body">
+                    <form id="searchForm" th:action="@{/warehouse/{id}(id=${warehouse != null ? warehouse.id : 0})}">
+                        <div class="form-group">
+                            <label for="orderId">ID Đơn Hàng:</label>
+                            <input type="text" class="form-control" id="orderId" name="orderId"
+                                   placeholder="Nhập ID đơn hàng">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Tìm Kiếm</button>
+                    </form>
+                    <div>
+                        <ul class="nav nav-tabs nav-justified">
+                            <li role="presentation" >
+                                <a th:href="@{/warehouse/{id}(id=${wid})}">All</a></li>
+                            <li role="presentation">
+                                <a th:href="@{/warehouse/{id}(id=${wid}, logisticsType='coming')}">Coming</a>
+                            </li>
+                            <li role="presentation">
+                                <a th:href="@{/warehouse/{id}(id=${wid}, logisticsType='arrived')}">Arrived</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div th:if="${warehouse == null}" >
+                        <div class="info-item">
+                          <div class="no-orders">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <h2>Không có đơn hàng nào!</h2>
+                            <p>Xin lỗi, không tìm thấy đơn hàng.</p>
+                          </div>
+                        </div>
+                    </div>
+                  <div th:if="${warehouse !=null}">
+                    <div  th:each="order : ${warehouse.orderExportRequestList}"  class="listContent">
+                        <h4>Hóa Đơn #<span th:text="${order.id}"></span></h4>
+                        <div class="info-container">
+                            <div class="info-item">
+                                <strong>Tên Khách Hàng:</strong>
+                                <span th:text="${order.orderForName}"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Người Đặt Hàng:</strong>
+                                <span th:text="${order.orderByName}"></span>
+                            </div>
+                            <div class="info-item">
+                                <strong>Trạng Thái:</strong>
+                                <span th:text="${order.state}"></span>
+                            </div>
+                        </div>
+                        <hr/>
+
+                        <h3>Chi Tiết Đơn Hàng</h3>
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>ID Sản Phẩm</th>
+                                <th>Tên Sản Phẩm</th>
+                                <th>Số Lượng</th>
+                                <th>Giá (VNĐ)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="detail : ${order.details}">
+                                <td th:text="${detail.productId}"></td>
+                                <td th:text="${detail.productName}"></td>
+                                <td th:text="${detail.amount}"></td>
+                                <td th:text="${detail.total_price}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Chi Phí Đơn Hàng</h3>
+
+                        <p><strong>Nhà Vận Chuyển:</strong> <span th:text="${order.transName}"></span></p>
+                        <h4><strong>Tổng Cộng:</strong> <span th:text="${order.totalPrice}"></span> VNĐ</h4>
+                        <hr/>
+
+                        <button class="btn btn-primary status-btn acceptOrder"
+                                th:data-id="${order.id}"
+                                th:if="${order.state == 'coming'}">Nhận đơn hàng
+                        </button>
+                        <button class="btn btn-info status-btn ProcessBtn"
+                                th:data-id="${order.id}"
+                                th:if="${order.state == 'arrived'}">Xuất Đơn hàng
+                        </button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="modal fade" id="warehouseSelectModal" tabindex="-1" role="dialog" aria-labelledby="warehouseSelectModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="warehouseSelectModalLabel">Chọn Kho Xuất</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="selectWarehouseForm" th:action="@{/exportOrder}" method="post">
+                                <div class="form-group">
+                                    <label for="warehouseIds">Chọn Kho:</label>
+                                    <select class="form-control" id="warehouseIds" name="warehouseId" required>
+                                        <option value="">-- Chọn Kho --</option>
+                                        <option th:each="warehouse : ${warehouseChoice}" th:value="${warehouse.id}" th:text="${warehouse.name}"></option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-success btn-block" id="deliverToCustomerBtn">
+                                    Giao đến khách hàng
+                                </button>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                    <button type="submit" class="btn btn-primary" id="exportOrderBtn">Xuất Đơn Hàng</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <input type="hidden" id="warehouseId" th:value="${wid}"></div>
+    <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<div id="urlContainer" th:data-url="@{/updateLogictis}"></div>
+<div id="urlContainer1" th:data-url="@{/completeOrder}"></div>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+<script th:src="@{/src/js/update-logistics.js}"></script>
+</body>
+</html>

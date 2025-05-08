@@ -1,0 +1,135 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  - ask_price
+  - ask_category
+  - ask_image
+  - ask_product_details
+  - ask_review
+  - ask_return_policy
+  - ask_storage
+  - ask_related_products
+
+entities:
+  - product_name
+
+responses:
+  utter_greet:
+    - text: "Hey! How are you?"
+
+  utter_cheer_up:
+    - text: "Here is something to cheer you up:"
+      image: "https://i.imgur.com/nGF1K8f.jpg"
+
+  utter_did_that_help:
+    - text: "Did that help you?"
+
+  utter_happy:
+    - text: "Great, carry on!"
+
+  utter_goodbye:
+    - text: "Bye"
+
+  utter_iamabot:
+    - text: "I am a bot, powered by Rasa."
+  utter_price:
+    - text: "The price of {product_name} is {price} VND."
+
+  utter_category:
+    - text: "{product_name} belongs to the {category} category."
+
+  utter_image:
+    - text: "Here is the image of {product_name}: {image_url}"
+  utter_ask_product_details:
+    - text: "The details of {product_name} include its ingredients, features, and more."
+
+  utter_ask_review:
+    - text: "Let me check the reviews for {product_name}..."
+
+  utter_ask_storage:
+    - text: "Let me check the best way to store {product_name}..."
+
+  utter_ask_related_products:
+    - text: "Let me find similar products for {product_name}..."
+
+  utter_return_policy:
+    - text: "Our return policy allows returns within 7 days of purchase. Please provide an image or video proof of the product condition."
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+
+slots:
+  product_name:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: product_name
+
+  price:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: price
+
+  category:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: category
+
+  image_url:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: image_url
+
+  details:
+    type: text
+    mappings:
+      - type: custom
+
+  review:
+    type: text
+    mappings:
+      - type: custom
+
+  storage_guide:
+    type: text
+    mappings:
+      - type: custom
+
+  related_products:
+    type: text
+    mappings:
+      - type: custom
+
+  return_policy:
+    type: text
+    mappings:
+      - type: custom
+
+  sentiment:
+    type: text
+    mappings:
+      - type: custom
+
+
+actions:
+  - action_show_price
+  - action_show_category
+  - action_show_image
+  - action_show_product_details
+  - action_show_review
+  - action_show_storage_guide
+  - action_suggest_similar_products
+  - action_return_policy
+  - action_analyze_sentiment

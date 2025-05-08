@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="com.dxp_HeThongChuoiCungUng_jar_0.0.1-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>com.dxp.HeThongChuoiCungUng.Model.User</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Inventory</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.DetailexportorderProduct</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.OderCustomer</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Manager</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Detailsexportordercost</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Detailimportorder</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Materialstock</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Performanevaluation</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Employee</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Supplierperformance</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Manufacture</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Warehouse</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Oderexport</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Shipment</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.DetailexportorderMaterial</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Category</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Product</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Partner</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Supplier</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Material</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Transportpartner</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Materialprice</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Customer</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Agency</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Importorder</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.OderAgency</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Productstock</class>
+    <!-- Remove duplicate or incorrect class entries here -->
+    <class>com.dxp.HeThongChuoiCungUng.Model.Detailexportorder</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.CustomerSupport</class>
+    <class>com.dxp.HeThongChuoiCungUng.Model.Cost</class>
+    <properties>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/htqlccudb?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
+      <property name="jakarta.persistence.jdbc.user" value="root"/>
+      <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+      <property name="jakarta.persistence.jdbc.password" value="123456"/>
+      <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+    </properties>
+  </persistence-unit>
+</persistence>

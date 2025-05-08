@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .form-container {
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-container h1 {
+        margin-bottom: 20px;
+        color: #007bff;
+    }
+    .form-group label {
+        font-weight: bold;
+    }
+    .form-group textarea {
+        resize: vertical;
+    }
+    .btn-submit {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+  </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        SupplyChain Page
+        <small>it all starts here</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">SupplyChain Page</li>
+      </ol>
+    </section>
+    <section class="content">
+      <div class="container form-container">
+        <h1>Chào mừng đến trang quản trị</h1>
+
+        <form th:action="@{/AddProduct}" th:object="${product}" method="post" enctype="multipart/form-data">
+          <div th:if="${#fields.hasErrors()}">
+            <div class="alert-error">
+              <ul>
+                <li th:each="err : ${#fields.errors()}" th:text="${err}"></li>
+              </ul>
+            </div>
+          </div>
+          <input type="hidden" th:field="*{id}" />
+          <div class="form-group">
+            <label for="name">Tên sản phẩm:</label>
+            <input type="text" id="name" class="form-control" th:field="*{name}"/>
+          </div>
+          <div class="form-group">
+            <label for="price">Giá:</label>
+            <input type="number" id="price" th:field="*{price}" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label for="detail">Chi tiết:</label>
+            <textarea id="detail" class="form-control" th:field="*{detail}" rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="categoryId">Danh mục:</label>
+            <select id="categoryId" class="form-control" th:field="*{categoryId}">
+              <option value="" label="-- Chọn điều danh mục --"></option>
+              <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"
+              th:selected = "${category.id == categoryId}" ></option>
+            </select>
+            <div th:if="${#fields.hasErrors('categoryId')}" class="alert alert-danger" th:errors="*{categoryId}"></div>
+          </div>
+          <div class="form-group">
+
+            <input accept=".png,.jpg" type="file" th:field="*{file}" class="form-control" id="file"  />
+            <div th:if = "${product.id != null}">
+              <img src="${product.img}" alt="${product.name}" width="120" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit"
+                  th:if="${product.id == null}">Thêm sản phẩm</button>
+          <button type="submit" class="btn-submit"
+                  th:unless="${product.id == null}">Cập nhật sản phẩm</button>
+        </form>
+
+      </div>
+    </section>
+  </div>
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-ui.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/adminlte.min.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="tinymce/tinymce.min.js"></script>
+<script src="tinymce/config.js"></script>
+<script src="js/function.js"></script>
+</body>
+</html>

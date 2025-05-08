@@ -1,0 +1,347 @@
+version: "3.1"
+
+nlu:
+  - intent: greet
+    examples: |
+      - hello
+      - hi
+      - good morning
+      - good evening
+      - welcome
+      - hey
+      - good day
+      - hi there
+      - hello everyone
+
+  - intent: goodbye
+    examples: |
+      - goodbye
+      - see you
+      - bye
+      - have a nice day
+      - take care
+      - see you later
+      - farewell
+
+  - intent: affirm
+    examples: |
+      - yes
+      - sure
+      - correct
+      - absolutely
+      - of course
+      - that's right
+      - okay
+      - fine
+
+  - intent: deny
+    examples: |
+      - no
+      - not really
+      - no thanks
+      - I don't think so
+      - I disagree
+      - not at all
+
+  - intent: mood_great
+    examples: |
+      - awesome
+      - feeling good
+      - great
+      - I'm happy
+      - fantastic
+      - I'm doing well
+      - very happy
+      - feeling awesome
+      - feeling great
+
+  - intent: mood_unhappy
+    examples: |
+      - I'm sad
+      - not feeling great
+      - feeling down
+      - I'm upset
+      - not in a good mood
+      - really sad
+      - feeling bad
+      - feeling disappointed
+      - feeling miserable
+
+  - intent: bot_challenge
+    examples: |
+      - are you a bot?
+      - are you human?
+      - are you talking to a bot?
+      - am I talking to a human?
+
+  - intent: ask_category
+    examples: |
+      - What category is [Matcha Milk Tea](product_name) in?
+      - What is the category of [Fruit Cocktail](product_name)?
+      - What group does [Pure Coffee](product_name) belong to?
+      - What type is [Apple Juice](product_name)?
+      - What category is [Strawberry Smoothie](product_name) in?
+      - What is the category of [Cola](product_name)?
+      - What group does [Green Tea](product_name) belong to?
+      - What type is [Iced Milk Coffee](product_name)?
+      - What category is [Pure Green Tea](product_name) in?
+      - What is the category of [Strawberry Milk Tea](product_name)?
+      - What category is [Lemon Tea](product_name) in?
+      - What is the category of [Heineken Beer](product_name)?
+      - What group does [Tiger Beer](product_name) belong to?
+      - What type is [White Wine](product_name)?
+      - What category is [Espresso Coffee](product_name) in?
+      - What is the category of [Fanta](product_name)?
+      - What group does [Peach Tea](product_name) belong to?
+      - What type is [Grape Juice](product_name)?
+      - What category is [Kiwi Smoothie](product_name) in?
+      - What is the category of [Rose Wine](product_name)?
+      - What group does [Sprite](product_name) belong to?
+      - What type is [Matcha Caramel Milk Tea](product_name)?
+      - What category is [Pineapple Juice](product_name) in?
+      - What is the category of [Mango Smoothie](product_name)?
+      - What group does [Jasmine Tea](product_name) belong to?
+      - What type is [Budweiser Beer](product_name)?
+      - What category is [Gin](product_name) in?
+      - What is the category of [Hot Black Coffee](product_name)?
+      - What group does [7Up](product_name) belong to?
+      - What type is [Bubble Tea](product_name)?
+      - What category is [Pomegranate Juice](product_name) in?
+      - What is the category of [Avocado Smoothie](product_name)?
+      - What group does [Lemon Salt Tea](product_name) belong to?
+      - What type is [Corona Beer](product_name)?
+      - What category is [Watermelon Juice](product_name) in?
+      - What is the category of [Traditional Phin Coffee](product_name)?
+      - What group does [Coca-Cola](product_name) belong to?
+      - What type is [Green Tea Milk Tea](product_name)?
+      - What category is [Carrot Juice](product_name) in?
+      - What is the category of [Apple Smoothie](product_name)?
+      - What group does [Ginger Tea](product_name) belong to?
+      - What type is [Mocha Coffee](product_name)?
+      - What category is [Pepsi](product_name) in?
+      - What is the category of [Chocolate Milk Tea](product_name)?
+      - What group does [Orange Juice](product_name) belong to?
+      - What type is [Strawberry Smoothie](product_name)?
+      - What category is [Ice Tea](product_name) in?
+      - What is the category of [Lime Soda](product_name)?
+      - What group does [Tropical Juice](product_name) belong to?
+      - What type is [Choco Smoothie](product_name)?
+      - What category is [Caramel Macchiato](product_name) in?
+      - What is the category of [Passion Fruit Juice](product_name)?
+      - What group does [Iced Green Tea](product_name) belong to?
+      - What type is [Blackcurrant Juice](product_name)?
+      - What category is [Taro Milk Tea](product_name) in?
+      - What is the category of [Raspberry Smoothie](product_name)?
+      - What group does [Matcha Frappuccino](product_name) belong to?
+      - What type is [Peach Smoothie](product_name)?
+      - What category is [Lychee Juice](product_name) in?
+      - What is the category of [Mango Tea](product_name)?
+      - What group does [Milkshake](product_name) belong to?
+      - What type is [Avocado Milkshake](product_name)?
+      - What category is [Strawberry Frappe](product_name) in?
+      - What is the category of [Watermelon Smoothie](product_name)?
+      - What group does [Yogurt Smoothie](product_name) belong to?
+
+  - intent: ask_image
+    examples: |
+      - Show me the image of [Matcha Milk Tea](product_name)
+      - Where is the image of [Fruit Cocktail](product_name)?
+      - Do you have an image of [Pure Coffee](product_name)?
+      - Show me the image of [Strawberry Smoothie](product_name)
+      - Where is the image of [Cola](product_name)?
+      - Show me the image of [Green Tea](product_name)
+      - Do you have an image of [Iced Milk Coffee](product_name)?
+      - Show me the image of [Pure Green Tea](product_name)
+      - Where is the image of [Strawberry Milk Tea](product_name)?
+      - Show me the image of [Lemon Tea](product_name)
+      - Where is the image of [Heineken Beer](product_name)?
+      - Do you have an image of [Tiger Beer](product_name)?
+      - Show me the image of [White Wine](product_name)
+      - Where is the image of [Espresso Coffee](product_name)?
+      - Show me the image of [Fanta](product_name)
+      - Do you have an image of [Peach Tea](product_name)?
+      - Show me the image of [Grape Juice](product_name)
+      - Where is the image of [Kiwi Smoothie](product_name)?
+      - Show me the image of [Rose Wine](product_name)
+      - Where is the image of [Sprite](product_name)?
+      - Do you have an image of [Matcha Caramel Milk Tea](product_name)?
+      - Show me the image of [Pineapple Juice](product_name)
+      - Where is the image of [Mango Smoothie](product_name)?
+      - Show me the image of [Jasmine Tea](product_name)
+      - Where is the image of [Budweiser Beer](product_name)?
+      - Do you have an image of [Gin](product_name)?
+      - Show me the image of [Hot Black Coffee](product_name)
+      - Where is the image of [7Up](product_name)?
+      - Show me the image of [Bubble Tea](product_name)
+      - Do you have an image of [Pomegranate Juice](product_name)?
+      - Show me the image of [Avocado Smoothie](product_name)
+      - Where is the image of [Lemon Salt Tea](product_name)?
+      - Show me the image of [Corona Beer](product_name)
+      - Where is the image of [Watermelon Juice](product_name)?
+      - Do you have an image of [Traditional Phin Coffee](product_name)?
+      - Show me the image of [Coca-Cola](product_name)
+      - Where is the image of [Green Tea Milk Tea](product_name)?
+      - Show me the image of [Carrot Juice](product_name)
+      - Where is the image of [Apple Smoothie](product_name)?
+      - Do you have an image of [Ginger Tea](product_name)?
+      - Show me the image of [Mocha Coffee](product_name)
+      - Where is the image of [Pepsi](product_name)?
+      - Do you have an image of [Chocolate Milk Tea](product_name)?
+      - Show me the image of [Orange Juice](product_name)
+      - Where is the image of [Strawberry Smoothie](product_name)?
+      - Show me the image of [Bubble Tea](product_name)
+      - Where is the image of [Ice Tea](product_name)?
+      - Do you have an image of [Lime Soda](product_name)?
+      - Show me the image of [Tropical Juice](product_name)
+      - Where is the image of [Choco Smoothie](product_name)?
+      - Show me the image of [Caramel Macchiato](product_name)
+      - Where is the image of [Passion Fruit Juice](product_name)?
+      - Do you have an image of [Iced Green Tea](product_name)?
+      - Show me the image of [Blackcurrant Juice](product_name)
+      - Where is the image of [Taro Milk Tea](product_name)?
+      - Do you have an image of [Raspberry Smoothie](product_name)?
+      - Show me the image of [Matcha Frappuccino](product_name)
+      - Where is the image of [Peach Smoothie](product_name)?
+      - Do you have an image of [Lychee Juice](product_name)?
+      - Show me the image of [Mango Tea](product_name)
+      - Where is the image of [Milkshake](product_name)?
+      - Do you have an image of [Avocado Milkshake](product_name)?
+      - Show me the image of [Strawberry Frappe](product_name)
+      - Where is the image of [Watermelon Smoothie](product_name)?
+      - Do you have an image of [Yogurt Smoothie](product_name)?
+
+  - intent: ask_price
+    examples: |
+      - How much is [Matcha Milk Tea](product_name)?
+      - What's the price of [Fruit Cocktail](product_name)?
+      - How much does [Pure Coffee](product_name) cost?
+      - I'd like to know the price of [Apple Juice](product_name)?
+      - What's the price for [Strawberry Smoothie](product_name)?
+      - How much is [Cola](product_name)?
+      - How much is [Green Tea](product_name)?
+      - How much is [Iced Milk Coffee](product_name)?
+      - What's the price of [Pure Green Tea](product_name)?
+      - How much does [Strawberry Milk Tea](product_name) cost?
+      - How much is [Lemon Tea](product_name)?
+      - What's the price of [Heineken Beer](product_name)?
+      - How much is [Tiger Beer](product_name)?
+      - What's the price of [White Wine](product_name)?
+      - How much is [Espresso Coffee](product_name)?
+      - What's the price for [Fanta](product_name)?
+      - How much is [Peach Tea](product_name)?
+      - What's the price of [Grape Juice](product_name)?
+      - How much does [Kiwi Smoothie](product_name) cost?
+      - How much is [Rose Wine](product_name)?
+      - What's the price of [Sprite](product_name)?
+      - How much is [Matcha Caramel Milk Tea](product_name)?
+      - How much does [Pineapple Juice](product_name) cost?
+      - What's the price of [Mango Smoothie](product_name)?
+      - How much is [Jasmine Tea](product_name)?
+      - What's the price of [Budweiser Beer](product_name)?
+      - How much is [Gin](product_name)?
+      - What's the price of [Hot Black Coffee](product_name)?
+      - How much does [7Up](product_name) cost?
+      - What's the price for [Bubble Tea](product_name)?
+      - How much is [Pomegranate Juice](product_name)?
+      - How much does [Avocado Smoothie](product_name) cost?
+      - What's the price of [Lemon Salt Tea](product_name)?
+      - How much is [Corona Beer](product_name)?
+      - How much does [Watermelon Juice](product_name) cost?
+      - What's the price of [Traditional Phin Coffee](product_name)?
+      - How much is [Coca-Cola](product_name)?
+      - What's the price of [Green Tea Milk Tea](product_name)?
+      - How much is [Carrot Juice](product_name)?
+      - How much does [Apple Smoothie](product_name) cost?
+      - What's the price of [Ginger Tea](product_name)?
+      - How much is [Mocha Coffee](product_name)?
+      - How much does [Pepsi](product_name) cost?
+      - What's the price for [Chocolate Milk Tea](product_name)?
+      - How much is [Orange Juice](product_name)?
+      - What's the price of [Strawberry Smoothie](product_name)?
+      - How much does [Bubble Tea](product_name) cost?
+      - How much is [Ice Tea](product_name)?
+      - What's the price of [Lime Soda](product_name)?
+      - How much is [Tropical Juice](product_name)?
+      - What's the price for [Choco Smoothie](product_name)?
+      - How much does [Caramel Macchiato](product_name) cost?
+      - What's the price of [Passion Fruit Juice](product_name)?
+      - How much is [Iced Green Tea](product_name)?
+      - What's the price of [Blackcurrant Juice](product_name)?
+      - How much is [Taro Milk Tea](product_name)?
+      - What's the price of [Raspberry Smoothie](product_name)?
+      - How much does [Matcha Frappuccino](product_name) cost?
+      - What's the price for [Peach Smoothie](product_name)?
+      - How much is [Lychee Juice](product_name)?
+      - What's the price of [Mango Tea](product_name)?
+      - How much is [Milkshake](product_name)?
+      - What's the price of [Avocado Milkshake](product_name)?
+      - How much does [Strawberry Frappe](product_name) cost?
+      - What's the price of [Watermelon Smoothie](product_name)?
+      - How much is [Yogurt Smoothie](product_name)?
+
+  - intent: ask_product_details
+    examples: |
+      - Can you tell me the details of [Cafe Nguyên chất](product_name)?
+      - What's in [Fruit Cocktail](product_name)?
+      - Tell me about [Pure Coffee](product_name).
+      - What are the ingredients of [Apple Juice](product_name)?
+      - Describe [Strawberry Smoothie](product_name).
+      - What does [Cola](product_name) contain?
+      - Tell me more about [Green Tea](product_name).
+      - Can you provide details about [Iced Milk Coffee](product_name)?
+      - What are the details of [Pure Green Tea](product_name)?
+      - Can you explain [Strawberry Milk Tea](product_name)?
+      - Can you tell me the details of [Cafe Latte](product_name)?
+      - What are the details of [Bia Corona](product_name)?
+
+  - intent: ask_review
+    examples: |
+      - What do people say about [Pure Coffee](product_name)?
+      - Can you give me a review of [Matcha Milk Tea](product_name)?
+      - Tell me some feedback about [Espresso Coffee](product_name).
+      - How is [Strawberry Smoothie](product_name)?
+      - Do you have any reviews for [Green Tea](product_name)?
+      - Is [Red Wine](product_name) good?
+      - I want to know how people feel about [Latte Coffee](product_name).
+      - What’s your opinion on [Peach Tea](product_name)?
+      - Tell me about the experience of drinking [Chocolate Milk Tea](product_name).
+      - How does [Jasmine Tea](product_name) taste?
+      - What do customers think of [Mocha Coffee](product_name)?
+      - Can you tell me about [Watermelon Juice](product_name)?
+      - Is [Bubble Tea](product_name) a good choice?
+      - How does [Ginger Tea](product_name) compare to other teas?
+
+  - intent: ask_storage
+    examples: |
+      - How should I store [Matcha Milk Tea](product_name)?
+      - What's the best way to store [Red Wine](product_name)?
+      - How do I keep [Espresso Coffee](product_name) fresh?
+      - Can you tell me how to store [Fresh Orange Juice](product_name)?
+      - How long can I keep [Bubble Tea](product_name) in the fridge?
+      - Should I refrigerate [Coca-Cola](product_name)?
+      - What is the shelf life of [Avocado Smoothie](product_name)?
+
+  - intent: ask_return_policy
+    examples: |
+      - What is the return policy for [Matcha Milk Tea](product_name)?
+      - Can I return [Red Wine](product_name) if I don't like it?
+      - How do I get a refund for [Espresso Coffee](product_name)?
+      - Can I exchange [Soft Drinks](product_name) if they are damaged?
+      - Is it possible to return [Fresh Juices](product_name)?
+      - What is your return policy on [Smoothies](product_name)?
+      - If my [Pure Coffee] package is damaged, can I return it?
+      - Can I return [Milk Products] if they are expired?
+      - What are the conditions for returning [Coca-Cola](product_name)?
+
+  - intent: ask_related_products
+    examples: |
+      - Can you suggest something similar to [Matcha Milk Tea](product_name)?
+      - What are some alternatives to [Red Wine](product_name)?
+      - I like [Espresso Coffee](product_name), what else should I try?
+      - Are there any similar drinks to [Strawberry Smoothie](product_name)?
+      - What’s a good substitute for [Coca-Cola](product_name)?
+      - Can you recommend a drink similar to [Heineken Beer](product_name)?
+      - I want to try something like [Bubble Tea](product_name), any suggestions?
+      - What’s a good alternative to [Avocado Smoothie](product_name)?
+      - Can you recommend something similar to [Peach Tea](product_name)?
+      - If I like [Espresso Coffee](product_name), what else should I order?

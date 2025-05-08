@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="wrapper">
+    <div th:replace="layer/header :: header"></div>
+    <div th:replace="layer/sidebar :: aside"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>Tái Ký Hợp Đồng</h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                <li class="active"></li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="container">
+                <div id="agencyForm">
+                    <form th:action="@{/contract/new/{id}(id=${ou})}"
+                          th:object="${partners}" method="post" >
+                        <h2>Thông Tin Đối Tác</h2>
+
+                        <div class="form-group">
+                            <label>Tên Đối Tác:</label>
+                            <input type="text" th:value="${part.name}" class="form-control" readonly />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactInfo">Thông Tin Liên Hệ:</label>
+                            <input type="text" id="contactInfo" th:field="*{contactInfo}" class="form-control" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="type">Loại:</label>
+                            <select id="type" th:field="*{type}" class="form-control" required>
+                                <option value="">Chọn Loại</option>
+                                <option value="AGENCY" th:selected="${part.type == 'AGENCY'}">Đại Lý</option>
+                                <option value="TRANSPORT" th:selected="${part.type == 'TRANSPORT'}">Vận Chuyển</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="createDate">Ngày Tạo:</label>
+                            <input id="createDate" type="date" th:field="*{createDate}" class="form-control" required  />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="endDate">Ngày Hết Hạn:</label>
+                            <input id="endDate" type="date" th:field="*{endDate}" class="form-control" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="active">Kích Hoạt:</label>
+                            <input id="active" type="checkbox" th:field="*{active}" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Lưu Hợp Đồng</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="layer/footer :: footer"></div>
+
+</div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+</body>
+</html>

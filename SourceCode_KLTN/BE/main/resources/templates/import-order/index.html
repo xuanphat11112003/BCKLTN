@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+    .tableOrder {
+        border: 1px solid grey;
+        margin: 10px;
+        padding: 5px;
+        border-radius: 10px;
+    }
+    .choice{
+        display : flex;
+    }
+    .choice > div{
+        margin : 5px;
+    }
+</style>
+<div class="wrapper">
+    <div th:replace="layer/header :: header"></div>
+    <div th:replace="layer/sidebar :: aside"></div>
+
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                Danh sách Đơn hàng
+                <small>Quản lý Đơn hàng</small>
+            </h1>
+            <div class = "filterOrder">
+                <form th:action ="@{/indexImportOrder}">
+                    <div class = "choice">
+                        <div>
+                            <select class="form-control field-DateOrder"   name ="orderDateSort">
+                                <option value="" label="-- Sắp Xếp Theo Ngày --"></option>
+                                <option value="asc" label="Tăng Dần Theo Ngày"></option>
+                                <option value="desc" label="Giảm dần theo ngày"></option>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="text" class="form-control" id="kw" placeholder="Tìm kiếm đơn hàng..." name="orderId">
+                        </div>
+                        <div>
+                            <select class="form-control field-"   name ="active">
+                                <option value="" label="---Lọc Theo Xác Nhận----"></option>
+                                <option value="true" label="Đã Xác Nhận"></option>
+                                <option value="false" label="Chưa Xác Nhận"></option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <select class="form-control field-category"   name ="payment">
+                                <option value="" label="-- Lọc Theo Phương Thức Thanh Toán --"></option>
+                                <option value="Thanh Toán Ngay Lập Tức" label="Thanh Toán Ngay Lập Tức"></option>
+                                <option value="Thanh Toán Sau 1 Ngày Nhận Hóa Đơn" label="Thanh Toán Sau 1 Ngày Nhận Hóa Đơn"></option>
+                                <option value="Thanh toán Sau khi nhận hàng" label="Thanh toán Sau khi nhận hàng"></option>
+                            </select>
+                        </div>
+                        <div >
+                            <button class="btn btn-info" type="submit">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">Đơn hàng</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Danh sách Đơn hàng</h3>
+                </div>
+                <div class="box-body">
+                    <div>
+                        <button type="button" class="btn btn-primary">
+                            <a th:href="@{/import-order}" style="color: white;">
+                                <i class="fa fa-plus"></i> Thêm Đơn hàng
+                            </a>
+                        </button>
+                    </div>
+
+                    <!-- Loop through each import order -->
+                    <div class="tableOrder" th:each="order : ${orders}">
+                        <h4>Đơn hàng ID: <span th:text="${order.id}"></span></h4>
+
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Ngày Đơn hàng</th>
+                                <th>Tổng Chi phí</th>
+                                <th>Tình trạng Thanh toán</th>
+                                <th>Người Tạo</th>
+                                <th>Nhà Cung Cấp</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td th:text="${order.id}">Order ID</td>
+                                <td th:text="${#dates.format(order.orderDate, 'dd/MM/yyyy')}">Date</td>
+                                <td th:text="${order.totalCost}">Total Cost</td>
+                                <td th:text="${order.payment}">Payment Status</td>
+                                <td th:text="${order.importedBy}">Creator</td>
+                                <td th:text="${order.detail.get(0).supplierName}">Supplier Name</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <h5>Chi tiết Đơn hàng:</h5>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>Sản Phẩm</th>
+                                <th>Số Lượng</th>
+                                <th>Tổng</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="detail : ${order.detail}">
+                                <td th:text="${detail.materialName}">Material Name</td>
+                                <td th:text="${detail.quantity}">Quantity</td>
+                                <td th:text="${detail.Totalamout}">Total Amount</td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div th:if="${order.active == false}">
+                            <button type="button" class="btn btn-warning" th:onclick="openMaterialStockModal([[${order.id}]])">
+                                <a style="color: white;">
+                                    Chưa xác nhận
+                                </a>
+                            </button >
+                            <button type="button" class ="btn btn-danger">
+                                <a th:href="@{/delete-order(id=${order.id})}" style="color: white;">
+                                    Xóa
+                                </a>
+                            </button>
+                        </div>
+                        <div th:if="${order.active == true and order.activeEvaluate == false}">
+                            <button type="button" class="btn btn-primary">
+                                <a th:href="@{|supplier/add-evaluate/${order.id}/${order.detail.get(0).supplierID}|}" style="color: white;">
+                                    Đánh giá Nhà cung cấp
+                                </a>
+                            </button>
+                        </div>
+                        <div th:if="${order.active == true and order.activeEvaluate == true}">
+                            <button type="button" class="btn btn-info">
+                                <a th:href="@{/evaluate-supplier(id=${order.id})}" style="color: white;">
+                                    Hoàn Tất
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="modal fade" id="materialStockModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Cập nhật tồn kho</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="materialStockForm">
+                        <div>
+                            <label for="orderIdInput"> Mã Đơn Hàng</label>
+                            <input type="text" id="orderIdInput" name="orderId" readonly />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="warehouseId">Mã nhà kho</label>
+                            <select type="text" class="form-control" id="warehouseId" name="wareHouseId" required>
+                                <option th:each="w : ${warehouse}" th:value ="${w.id}" th:text ="${w.name}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="entryDate">Ngày nhập</label>
+                            <input type="date" class="form-control" id="entryDate" name="entryDate" required>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="submitMaterialStock()">Cập nhật</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="layer/footer :: footer"></div>
+</div>
+<div id="urlContainer" th:data-url="@{/material-stock}"></div>
+
+<!-- jQuery 3 -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/adminlte.min.js"></script>
+<script src = "src/js/indexImportOrder.js" ></script>
+</body>
+</html>

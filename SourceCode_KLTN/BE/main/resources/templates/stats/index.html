@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+<div class="wrapper">
+    <div th:replace="layer/header :: header"></div>
+    <div th:replace="layer/sidebar :: aside"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>Thống kê báo cáo</h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                <li class="active"></li>
+            </ol>
+            <div style="width: 80%; margin: auto; text-align: center;">
+                <form th:action="@{/stats}" method="get" class="form-inline">
+                    <div class="input-group">
+                        <input type="text" name="searchKeyword" class="form-control" placeholder="Nhập tên nhà cung cấp" />
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="content">
+            <div style="width: 50%; margin: auto;">
+                <canvas id="performanceChart" style="width: 400px; height: 400px;"></canvas>
+                <canvas id="ratingsChart" style="display: none; width: 400px; height: 400px;"></canvas>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script th:inline="javascript">
+    var supplierStats = /*[[${supplierStats}]]*/ [];
+    var supplierNames = supplierStats.map(s => s.name);
+
+
+    var totalRatings = supplierStats.map(s => s.deliveryRatings + s.qualityRatings + s.priceRatings);
+    var ctx = document.getElementById('performanceChart').getContext('2d');
+    document.getElementById('performanceChart').width = 400;
+    document.getElementById('performanceChart').height = 400;
+    var performanceChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: supplierNames,
+            datasets: [{
+                label: 'Tổng Đánh Giá',
+                data: totalRatings,
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+
+    function handleSearch(event) {
+        event.preventDefault(); // Ngăn chặn gửi form
+
+        // Lấy từ khóa tìm kiếm
+        var searchKeyword = event.target.searchKeyword.value;
+
+        // Tìm kiếm nhà cung cấp tương ứng
+        var selectedSupplier = supplierStats.find(s => s.name === searchKeyword);
+
+        if (selectedSupplier) {
+            // Ẩn biểu đồ tròn
+            document.getElementById('performanceChart').style.display = 'none';
+            document.getElementById('ratingsChart').style.display = 'block';
+
+            // Dữ liệu cho biểu đồ cột
+            var ratingsData = [
+                selectedSupplier.deliveryRatings,
+                selectedSupplier.qualityRatings,
+                selectedSupplier.priceRatings
+            ];
+            var ratingLabels = ['Delivery Ratings', 'Quality Ratings', 'Price Ratings'];
+
+            var ctxBar = document.getElementById('ratingsChart').getContext('2d');
+            var ratingsChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ratingLabels,
+                    datasets: [{
+                        label: 'Đánh Giá',
+                        data: ratingsData,
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)',
+                            'rgba(255, 159, 64, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+        } else {
+            // Hiển thị thông báo nếu không tìm thấy nhà cung cấp
+            alert('Không tìm thấy nhà cung cấp!');
+        }
+    }
+</script>
+
+</body>
+</html>

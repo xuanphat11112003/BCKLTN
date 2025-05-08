@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+  <div th:replace="layer/header :: header"></div>
+  <div th:replace="layer/sidebar :: aside"></div>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Tạo đơn tác đại lý
+      </h1>
+    </section>
+    <section class="content">
+      <div class="container">
+        <div id="agencyForm">
+          <form th:action="@{/partners/add}" th:object="${partner}" method="post" enctype="multipart/form-data">
+            <h2>Thông Tin Đối Tác</h2>
+
+            <div class="form-group">
+              <div th:if="${#fields.hasErrors()}" class="alert alert-danger" role="alert">
+                <ul>
+                  <li th:each="error : ${#fields.errors()}" th:text="${error}"></li>
+                </ul>
+              </div>
+              <div th:if="${errMsg}" class="alert alert-danger" role="alert">
+                <span th:text="${errMsg}"></span>
+              </div>
+              <label for="name">Tên:</label>
+              <input type="text" id="name" th:field="*{name}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+              <label for="contactInfo">Thông Tin Liên Hệ:</label>
+              <input type="number" id="contactInfo" th:field="*{contactInfo}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+              <label for="type">Loại:</label>
+              <select id="type" th:field="*{type}" class="form-control" required onchange="toggleForms()">
+                <option value="">Chọn Loại</option>
+                <option value="AGENCY">Đại Lý</option>
+                <option value="TRANSPORT">Vận Chuyển</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="createDate">Ngày Tạo:</label>
+              <input id="createDate" type="date" th:field="*{createDate}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+              <label for="endDate">Ngày Hết Hạn:</label>
+              <input id="endDate" type="date" th:field="*{endDate}" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+              <label for="active">Kích Hoạt:</label>
+              <input id="active" type="checkbox" th:field="*{active}" />
+            </div>
+
+            <h2 id="agencyInfo" style="display: none;">Thông Tin Đại Lý</h2>
+            <div id="agencyFields" style="display: none;">
+              <div class="form-group">
+                <label for="agencyName">Tên Đại Lý:</label>
+                <input id="agencyName" type="text" th:field="*{partnerAgency.agency.managerName}" class="form-control"  />
+              </div>
+              <div class="form-group">
+                <label for="UserName">Tên Tài Khoản:</label>
+                <input id="UserName" type="text" th:field="*{partnerAgency.agency.user.username}" class="form-control"  />
+              </div>
+              <div class="form-group">
+                <label for="agencyPassword">Mật Khẩu:</label>
+                <input id="agencyPassword" type="password" th:field="*{partnerAgency.agency.user.password}" class="form-control"  />
+              </div>
+              <div class="form-group">
+                <label for="agencyEmail">Email:</label>
+                <input id="agencyEmail" type="email" th:field="*{partnerAgency.agency.user.email}" class="form-control"  />
+              </div>
+              <div class="form-group">
+                <label for="agencyfirstname">Tên:</label>
+                <input id="agencyfirstname" type="text" th:field="*{partnerAgency.agency.user.firstname}" class="form-control"  />
+              </div>
+              <div class="form-group">
+                <label for="agencyLastName">Họ Và Chữ Lót:</label>
+                <input id="agencyLastName" type="text" th:field="*{partnerAgency.agency.user.lastname}" class="form-control"  />
+              </div>
+              <div class="form-group">
+                <label for="agencyaddress">Địa Chỉ:</label>
+                <input id="agencyaddress" type="text" th:field="*{partnerAgency.agency.user.address}" class="form-control"  />
+              </div>
+              <div class="form-group">
+                <label for="file">Profile Picture:</label>
+                <input accept=".png,.jpg"  type="file" id="file" class="form-control" name="file" th:field="*{partnerAgency.agency.user.file}" >
+              </div>
+            </div>
+
+            <h2 id="transportInfo" style="display: none;">Thông Tin Vận Chuyển</h2>
+            <div id="transportFields" style="display: none;">
+              <div class="form-group">
+                <label for="transportName">Tên Vận Chuyển:</label>
+                <input id="transportName" type="text" th:field="*{partnerTransport.transportpartner.name}" class="form-control"  />
+              </div>
+
+              <div class="form-group">
+                <label for="transportEmail">Email Vận Chuyển:</label>
+                <input id="transportEmail" type="email" th:field="*{partnerTransport.transportpartner.email}" class="form-control"  />
+              </div>
+
+              <div class="form-group">
+                <label for="transportPhone">Số Điện Thoại:</label>
+                <input id="transportPhone" type="text" th:field="*{partnerTransport.transportpartner.numberPhone}" class="form-control"  />
+              </div>
+
+              <div class="form-group">
+                <label for="transportAddress">Địa Chỉ:</label>
+                <input id="transportAddress" type="text" th:field="*{partnerTransport.transportpartner.address}" class="form-control"  />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div th:replace="layer/footer :: footer"></div>
+</div>
+
+<!-- Scripts -->
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+
+<script>
+  function toggleForms() {
+    const type = document.getElementById('type').value;
+    const agencyFields = document.getElementById('agencyFields');
+    const transportFields = document.getElementById('transportFields');
+    const agencyInfo = document.getElementById('agencyInfo');
+    const transportInfo = document.getElementById('transportInfo');
+
+
+    if (type === 'AGENCY') {
+      agencyFields.style.display = 'block';
+      transportFields.style.display = 'none';
+      agencyInfo.style.display = 'block';
+      transportInfo.style.display = 'none';
+    } else if (type === 'TRANSPORT') {
+      agencyFields.style.display = 'none';
+      transportFields.style.display = 'block';
+      agencyInfo.style.display = 'none';
+      transportInfo.style.display = 'block';
+    } else {
+      // Nếu không chọn gì thì ẩn cả hai
+      agencyFields.style.display = 'none';
+      transportFields.style.display = 'none';
+      agencyInfo.style.display = 'none';
+      transportInfo.style.display = 'none';
+    }
+  }
+</script>
+</div>
+</body>
+</html>

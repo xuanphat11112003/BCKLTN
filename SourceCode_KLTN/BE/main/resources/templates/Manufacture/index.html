@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layer/head :: head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<style>
+    .card{
+        border : 1px solid;
+        background : white;
+        margin : 15px;
+    }
+</style>
+<div class="wrapper">
+    <div th:replace="layer/header :: header"></div>
+    <div th:replace="layer/sidebar :: aside"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>
+                Danh sách công thức
+                <small></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                <li class="active">Công thức</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="mb-3">
+                <form th:action="@{/manufacture}" method="get" class="form-inline">
+                    <input type="text" name="productName" class="form-control" placeholder="Tìm kiếm theo ID" />
+                    <button class="btn btn-primary ml-2" type="submit">Tìm kiếm</button>
+                    <a th:href="@{/manufacture/add}" class="btn btn-success ml-2">Tạo công thức</a>
+                </form>
+            </div>
+
+            <div th:each="entry : ${groupMaps}" class="card mb-3">
+                <div class="card-header">
+                    <h4 th:text="${entry.key}">Tên sản phẩm</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Tên nguyên liệu</th>
+                            <th>Số lượng</th>
+                            <th>Đơn vị</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="detail : ${entry.value}">
+                            <td th:text="${detail.material}"></td>
+                            <td th:text="${detail.amount}"></td>
+                            <td th:text="${detail.unit}"></td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td><button type="submit" class="btn btn-danger btn-sm">Xóa</button></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <div th:replace="layer/footer :: footer"></div>
+
+</div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/adminlte.min.js}"></script>
+</body>
+</html>
